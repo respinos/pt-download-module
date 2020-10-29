@@ -215,8 +215,8 @@ section.box-reader-main {
     display: flex;
     justify-content: space-between;
     box-shadow: 4px 4px 4px 0px #333;
-
   }
+
 }
 
 .box-reader {
@@ -253,12 +253,20 @@ section.box-reader-main {
       flex-grow: 0;
       padding: 0.25rem 0.5rem;
 
+      opacity: 0.05;
+
       button {
         margin-right: 0.25rem;
         .bi {
           height: 1.5rem;
           width: 1.5rem;
         }
+      }
+    }
+
+    &:hover {
+      .page-toolbar {
+        opacity: 1.0;
       }
     }
 
