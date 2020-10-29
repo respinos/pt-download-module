@@ -210,6 +210,7 @@ section.box-reader-main .box-reader-toolbar {
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
   width: 85%;
+  max-width: 62rem;
   background: #39383a;
   min-height: 3rem;
   padding: 0.5rem 0.5rem;

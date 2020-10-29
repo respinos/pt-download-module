@@ -207,6 +207,7 @@ section.box-reader-main {
     left: 50%;
     transform: translateX(-50%);
     width: 85%;
+    max-width: 62rem;
     background: $navbar-bgcolor;
     min-height: 3rem;
 
