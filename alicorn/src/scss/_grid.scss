@@ -1,0 +1,88 @@
+
+@media only screen and (max-width:62em) {
+
+  html[data-view="options"] {
+
+    #sidebar {
+      background: #fff;
+      z-index: 15;
+    }
+
+  }
+
+  main.main-container {
+    .container.container-boxed {
+      display: grid;
+      grid-template-areas: "overlapping";
+    }
+  }
+
+  .sidebar-container {
+    grid-area: overlapping;
+  }
+
+  #root {
+    .section-container {
+      grid-area: overlapping;
+      z-index: 10;
+    }
+  }
+
+  #sidebar:not(.sidebar-container--right) {
+    width: 100%;
+  }
+
+  html[data-expanded="false"] {
+    header {
+      display: none;
+    }
+
+    #sidebar {
+      display: none;
+      // transition: max-height 0.2s ease-out;
+    }
+  }
+
+  html[data-expanded="true"] {
+    main.main-container {
+      .container.container-boxed {
+        display: grid;
+        grid-template: "sidebar" auto "overlapping" 1fr;
+
+        .sidebar-container {
+          grid-area: sidebar;
+        }
+      }
+    }
+  }
+
+  html[data-sidebar-expanded="true"] {
+    #sidebar {
+      // flex-basis: 100vh;
+    }
+
+    main.main-container {
+      .container.container-boxed {
+
+        grid-template: overlapping 1fr;
+
+        .sidebar-container {
+          grid-area: overlapping;
+          z-index: 50 !important;
+        }
+
+        .section-container {
+          visibility: hidden;
+          opacity: 0;
+        }
+
+      }
+    }
+
+    #section {
+      flex-basis: 0;
+    }
+  }
+
+}
+

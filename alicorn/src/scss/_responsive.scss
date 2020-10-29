@@ -1,0 +1,42 @@
+// html.mobile {
+
+@media only screen and (max-width:62em) {
+
+  html[data-view="options"] {
+
+    #sidebar {
+      // position: fixed;
+      // display: block;
+      background: #fff;
+      z-index: 15;
+    }
+
+  }
+
+  #sidebar:not(.sidebar-container--right) {
+    width: 100%;
+  }
+
+  html[data-expanded="false"] {
+    header {
+      display: none;
+    }
+
+    #sidebar {
+      display: none;
+      // transition: max-height 0.2s ease-out;
+    }
+  }
+
+  html[data-sidebar-expanded="true"] {
+    #sidebar {
+      flex-basis: 100vh;
+    }
+
+    #section {
+      flex-basis: 0;
+    }
+  }
+
+}
+

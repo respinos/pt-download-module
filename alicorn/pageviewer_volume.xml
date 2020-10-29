@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+   Copyright 2006, The Regents of The University of Michigan, All Rights Reserved
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject
+   to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<MBooksTop>
+
+  <!-- pageviewer.xml -->
+
+  <!-- XSL fallback files -->
+  <XslFileList>
+    <Filename>xsl2htmlutils.xsl</Filename>
+    <Filename>coins.xsl</Filename>
+    <Filename>skeleton.xsl</Filename>
+    <Filename>common.xsl</Filename>
+    <Filename>js_utils.xsl</Filename>
+    <Filename>loads.xsl</Filename>
+    <Filename>loads_helper_pt.xsl</Filename>
+    <Filename>coll.xsl</Filename>
+    <Filename>skin.xsl</Filename>
+    <Filename>pageviewer.xsl</Filename>
+    <Filename>pageviewer_volume.xsl</Filename>
+  </XslFileList>
+
+  <!-- Custom OPTIONAL XML for top-level file -->
+  <CustomXml><?CHUNK filename="pageviewer_extra.xml" optional="1"?></CustomXml>
+
+  <MBooksGlobals>
+    <?CHUNK filename="ptglobals.xml"?>
+    <OrphanCandidate><?ORPHAN_CANDIDATE?></OrphanCandidate>
+    <UrlRoots><?URL_ROOTS?></UrlRoots>
+    <PageLink><?PAGE_LINK?></PageLink>
+    <InCopyright><?IN_COPYRIGHT?></InCopyright>
+    <ItemType><?ITEM_TYPE?></ItemType>
+    <CurrentPageImageSource><?CURRENT_PAGE_IMG_SRC?></CurrentPageImageSource>
+    <CurrentPageImageWidth><?CURRENT_PAGE_IMG_WIDTH?></CurrentPageImageWidth>
+    <CurrentPageImageHeight><?CURRENT_PAGE_IMG_HEIGHT?></CurrentPageImageHeight>
+    <CurrentPageOcr><?CURRENT_PAGE_OCR?></CurrentPageOcr>
+    <CurrentView><?CURRENT_VIEW?></CurrentView>
+  </MBooksGlobals>
+
+  <?CHUNK filename="header.xml"?>
+
+  <MdpApp>
+    <CurrentPageFeatures><?CURRENT_PAGE_FEATURES?></CurrentPageFeatures>
+    <FeatureList><?FEATURE_LIST?></FeatureList>
+    <BackNavInfo><?BACK_NAV_LINK_INFO?></BackNavInfo>
+    <DefaultCollid><?DEFAULT_COLLID?></DefaultCollid>
+    <CollectionList><?COLLECTION_LIST?></CollectionList>
+    <LoginLink><?LOGIN_LINK?></LoginLink>
+    <AllowSinglePagePDF><?ALLOW_SINGLE_PAGE_PDF?></AllowSinglePagePDF>
+    <AllowFullPDF><?ALLOW_FULL_PDF?></AllowFullPDF>
+    <FullPDFAccessMessage><?FULL_PDF_ACCESS_MESSAGE?></FullPDFAccessMessage>
+    <Section108><?SECTION_108?></Section108>
+
+    <AddToCollectionForm>
+      <CollectionSelect><?COLLECTION_SELECT?></CollectionSelect>
+    </AddToCollectionForm>
+
+    <ViewTypeForm>
+      <ViewTypeValuesSelect><?VIEW_TYPE_VALUES?></ViewTypeValuesSelect>
+      <HiddenVars>
+        <?HIDDEN_SEQUENCE form="ViewTypeForm"?>
+        <?HIDDEN_NUM?>
+        <?HIDDEN_SIZE?>
+        <?HIDDEN_ID?>
+        <?HIDDEN_ATTR?>
+        <?HIDDEN_DATAROOT?>
+        <?HIDDEN_Q1?>
+      </HiddenVars>
+    </ViewTypeForm>
+
+    <QValsHash><?QVAL_ENCODED?></QValsHash>
+
+    <ViewTypeLinks>
+      <ViewTypeFullPdfLink><?VIEW_TYPE_FULL_PDF_LINK?></ViewTypeFullPdfLink>
+      <ViewTypeFullEpubLink><?VIEW_TYPE_FULL_EPUB_LINK?></ViewTypeFullEpubLink>
+      <ViewTypePdfLink><?VIEW_TYPE_PDF_LINK?></ViewTypePdfLink>
+      <ViewTypeImageLink><?VIEW_TYPE_IMAGE_LINK?></ViewTypeImageLink>
+      <ViewType1UpLink><?VIEW_TYPE_1UP_LINK?></ViewType1UpLink>
+      <ViewType2UpLink><?VIEW_TYPE_2UP_LINK?></ViewType2UpLink>
+      <ViewTypeThumbnailLink><?VIEW_TYPE_THUMBNAIL_LINK?></ViewTypeThumbnailLink>
+      <ViewTypeTextLink><?VIEW_TYPE_TEXT_LINK?></ViewTypeTextLink>
+      <ViewTypePlainTextLink><?VIEW_TYPE_PLAINTEXT_LINK?></ViewTypePlainTextLink>
+    </ViewTypeLinks>
+
+    <ViewTypeLinks>
+      <View name="download-pdf"><?VIEW_TYPE_FULL_PDF_LINK?></View>
+      <View name="pdf"><?VIEW_TYPE_PDF_LINK?></View>
+      <View name="image"><?VIEW_TYPE_IMAGE_LINK?></View>
+      <View name="1up"><?VIEW_TYPE_1UP_LINK?></View>
+      <View name="2up"><?VIEW_TYPE_2UP_LINK?></View>
+      <View name="thumb"><?VIEW_TYPE_THUMBNAIL_LINK?></View>
+      <View name="text"><?VIEW_TYPE_TEXT_LINK?></View>
+      <View name="plaintext"><?VIEW_TYPE_PLAINTEXT_LINK?></View>
+    </ViewTypeLinks>
+
+    <ResizeForm>
+      <ResizeValuesSelect><?RESIZE_VALUES?></ResizeValuesSelect>
+      <HiddenVars>
+        <?HIDDEN_SEQUENCE form="ResizeForm"?>
+        <?HIDDEN_NUM?>
+        <?HIDDEN_VIEW_TYPE?>
+        <?HIDDEN_ID?>
+        <?HIDDEN_ATTR?>
+        <?HIDDEN_DATAROOT?>
+        <?HIDDEN_Q1?>
+      </HiddenVars>
+    </ResizeForm>
+    <ResizeLinks>
+      <ResizeInLink><?RESIZE_IN_LINK?></ResizeInLink>
+      <ResizeOutLink><?RESIZE_OUT_LINK?></ResizeOutLink>
+    </ResizeLinks>
+    <RotateLinks>
+      <ClockwiseLink><?CLOCKWISE_LINK?></ClockwiseLink>
+      <CounterClockwiseLink><?COUNTER_CLOCKWISE_LINK?></CounterClockwiseLink>
+    </RotateLinks>
+    <PageLinks>
+      <FirstPageLink><?FIRST_PAGE_LINK?></FirstPageLink>
+      <PreviousPageLink><?PREVIOUS_PAGE_LINK?></PreviousPageLink>
+      <NextPageLink><?NEXT_PAGE_LINK?></NextPageLink>
+      <LastPageLink><?LAST_PAGE_LINK?></LastPageLink>
+    </PageLinks>
+    <PageXOfYForm>
+      <HiddenVars>
+        <?HIDDEN_SEQUENCE form="PageXofYForm"?>
+        <?HIDDEN_VIEW_TYPE?>
+        <?HIDDEN_SIZE?>
+        <?HIDDEN_ID?>
+        <?HIDDEN_ATTR?>
+        <?HIDDEN_DATAROOT?>
+        <?HIDDEN_Q1?>
+      </HiddenVars>
+    </PageXOfYForm>
+    <SearchForm>
+      <HiddenVars>
+        <?HIDDEN_ID?>
+        <?HIDDEN_ATTR?>
+        <?HIDDEN_DATAROOT?>
+      </HiddenVars>
+      <SearchResultsLink><?SEARCH_RESULTS_LINK?></SearchResultsLink>
+      <SearchResultsLabel><?SEARCH_RESULTS_LABEL?></SearchResultsLabel>
+      <InItemResultsLink><?IN_ITEM_SEARCH_RESULTS_LINK?></InItemResultsLink>
+      <?HEADER_SEARCH_FIELDS?>
+    </SearchForm>
+
+    <Manifest>
+      <!-- DO NOT FORGET READING ORDER -->
+      <FeatureList><?FEATURE_LIST_JSON?></FeatureList>
+      <FirstPageSeq><?FIRST_PAGE_SEQUENCE?></FirstPageSeq>
+      <DefaultSeq><?DEFAULT_SEQ?></DefaultSeq>
+      <BaseImage><?BASE_IMAGE_DIMENSIONS?></BaseImage>
+      <ReadingOrder><?READING_ORDER?></ReadingOrder>
+    </Manifest>
+
+    <FeedbackForm>
+      <?FEEDBACK_CGI_URL?>
+    </FeedbackForm>
+
+    <ApplicationParams><?SETUP_APPLICATION_PARAMS?></ApplicationParams>
+
+    <DownloadProgressBase><?DOWNLOAD_PROGRESS_BASE?></DownloadProgressBase>
+
+  </MdpApp>
+
+  <?METS_XML?>
+
+</MBooksTop>

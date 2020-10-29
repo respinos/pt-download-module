@@ -1,0 +1,339 @@
+// .sidebar-container {
+
+//   display: flex;
+//   flex-direction: column;
+//   // height: 100%;
+//   // overflow: hidden;
+
+//   margin-top: 1.5rem;
+//   min-width: 18rem;
+
+//   #mdpBackToResults {
+//     padding: 1rem 1rem 0.5rem;
+//     width: 95%;
+//     margin: 0 auto;
+//   }
+
+//   .panel {
+//     padding: 1rem;
+//     margin: 0 auto;
+//     width: 95%;
+
+//     &.bibLinks {
+//       padding-top: 0;
+//       // height: 100%;
+//     }
+
+//     h2, h3 {
+//       font-size: 110%;
+//       font-weight: bold;
+//       margin-bottom: 0.75rem;
+//       border-bottom: 1px solid #ddd;
+//       padding-bottom: 0.5rem;
+//     }
+
+//     p {
+//       margin-top: 1rem;
+//       margin-bottom: 1rem;
+//     }
+
+//     p:first-of-type, p:first-child {
+//       margin-top: 0;
+//     }
+
+//     p + p {
+//       margin-bottom: 0;
+//     }
+
+//     ul {
+//       // margin-bottom: 1rem;
+//     }
+
+//     li {
+//       position: relative;
+//     }
+
+//     li + li {
+//       margin-top: 0.25rem;
+//     }
+
+//     form {
+//       margin-top: 0.5rem;
+//       margin-bottom: 0.25rem;
+
+//       label {
+//         display: block;
+//         margin-bottom: 0.25rem;
+//       }
+
+//       input[type=text] {
+//         margin-bottom: 1rem;
+//       }
+//     }
+
+//     select {
+//       width: 100%;
+//       font-size: 100%;
+//       margin-top: 0.25rem;
+//       margin-bottom: 0.25rem;
+//     }
+
+//   }
+
+//   .scrollable {
+//     // overflow: auto;
+//     margin-bottom: 1rem;
+//   }
+
+// }
+
+// html.gt-ie10 {
+//   .bibLinks {
+//     height: 100%;
+//   }
+// }
+
+$icomoon-circle-right: "\ea42";
+$icomoon-circle-left: "\ea44";
+$sidebar-buffer: 1.0rem;
+
+.sidebar-toggle {
+  border-right: 1px solid #ddd;
+  margin-right: $sidebar-buffer;
+  width: $sidebar-buffer;
+  display: none;
+  align-items: flex-start;
+  justify-content: flex-end;
+  // justify-content: center;
+  padding-top: 1.5rem;
+
+  button {
+    flex-grow: 0;
+    height: auto;
+    white-space: nowrap;
+    padding: 1rem 0.5rem;
+    font-size: 1rem; // 2rem;
+    // margin-left: $sidebar-buffer;
+    z-index: 24;
+
+    &[aria-expanded="true"] {
+      opacity: 0.5;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: 0;
+
+      .icomoon {
+        &:before {
+          content: $icomoon-circle-left; 
+        }
+      }
+    }
+
+    &:hover, &:focus {
+      opacity: 1.0;
+    }
+
+    &[aria-expanded="false"] {
+      opacity: 1.0;
+      background: rgba(0, 0, 0, 0.8);
+      color: #eee;
+      font-size: 2rem;
+
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: 0;
+      margin-right: -3rem;
+
+      // border: 2px solid #666;
+      .icomoon {
+        &:before {
+          content: $icomoon-circle-right; 
+        }
+      }
+    }
+  }
+}
+
+html[data-sidebar-collapsible] .sidebar-toggle {
+  display: flex;
+}
+
+html[data-sidebar-collapsible] .sidebar-container {
+  border-right: none;
+  margin-right: 0;
+}
+
+html[data-sidebar-collapsible] {
+  .sidebar-container[hidden] + .sidebar-toggle {
+    margin-left: -$sidebar-buffer;
+  }
+}
+
+li.download-item--EPUB {
+  display: none;
+}
+
+html.mobile, html[data-item-type="volume/epub"] {
+  li.download-item--EPUB {
+    display: list-item;
+  }
+}
+
+@media only screen and (max-width: 62em) {
+  #sidebar:not(.sidebar-container--right) {
+    max-height: 100vh;
+  }
+
+  html[data-sidebar-expanded="true"] {
+    #toolbar-horizontal {
+      display: none;
+    }
+  }
+
+  html[data-sidebar-expanded="false"] {
+    &[data-expanded="true"] {
+      #toolbar-horizontal {
+        top: var(--toolbar-horizontal-top, 5.5rem);
+      }
+    }
+
+    &[data-expanded="false"] {
+      #toolbar-horizontal {
+        top: 0;
+      }
+    }
+  }
+}
+
+
+// -- BROWSER HACK
+@media only screen and ( max-width: 62em ) {
+  // html.mobile.ios[data-expanded="true"] {
+  //   .sidebar-container {
+  //     position: fixed;
+  //     z-index: 100;
+  //   }
+  // }
+
+  #sidebar {
+    button.sidebar-toggle-button[aria-expanded="true"] {
+      position: fixed;
+      z-index: 2;
+
+      & + div {
+        padding-top: 4rem;
+      }
+    }
+  }
+}
+
+*[hidden] {
+  display: none;
+}
+
+.embedUrlContainer {
+  position: reliatve;
+    h3 {
+        display: block;
+        font-weight: bold;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    input[type="radio"] {
+      padding-left: 1.2rem;
+    }
+
+    textarea {
+        width: 95%;
+        margin-bottom: 0.5rem;
+    }
+
+    label {
+      padding-right: 1rem;
+    }
+
+    label.radio .icomoon-scroll {
+      font-size: 1rem;
+    }
+    label.radio .icomoon-book-alt2 {
+      font-size: 1rem;
+    }
+
+    // #embedHelpIcon {
+    //   display: inline-block;
+    //   position: relative;
+    //   height: 18px;
+    //   width: 18px;
+    //   top: 0;
+    //   right: 0;
+    //   margin-left: 1rem;
+    //   line-height: 1.2;
+    //   // margin-left: 20rem;
+    //   // margin-bottom: 1rem;
+    //   background-image: url(/common/unicorn/img/icon_question.png);
+    //   background-repeat: no-repeat;
+    //   text-indent: -10000px;
+    // }
+}
+
+.versionContainer {
+  .version-label {
+    white-space: nowrap;
+  }
+  a {
+    font-size: .9rem;
+  }  
+}
+
+.pdfPartnerLoginLinkMessage {
+  font-style: italic;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+.help-block {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.btn-mini {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.share-toolbar {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+#action-clear-selection {
+  position: absolute;
+  right: 0;
+  margin-left: -8px;
+  visibility: hidden;
+}
+
+#sidebar {
+  margin-top: 0;
+
+  input[type=text], select {
+    font-size: 1rem;
+  }
+
+  #input-search-text {
+    font-size: 1rem !important;
+  }
+}
+
+.inactive {
+  display: none;
+}
+
+// section[data-selected="0"] {
+//   #action-clear-selection {
+//     visibility: hidden;
+//   }
+// }
+
