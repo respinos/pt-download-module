@@ -98,6 +98,7 @@ main[data-panel-open="true"] .box-main {
   padding: 0;
   -webkit-box-shadow: 4px 4px 4px 0px #333;
           box-shadow: 4px 4px 4px 0px #333;
+  border: 1px solid #666;
   -webkit-transition: width 0.5s;
   transition: width 0.5s;
 }
@@ -111,6 +112,7 @@ main[data-panel-open="true"] .box-main {
       -ms-flex-align: center;
           align-items: center;
   height: 3.5rem;
+  border-radius: 0;
 }
 
 .box-sidebar button svg + span {
@@ -121,6 +123,10 @@ main[data-panel-open="true"] .box-main {
   position: absolute;
   width: 1px;
   clip: rect(1px, 1px, 1px, 1px);
+}
+
+.box-sidebar:hover button {
+  border-radius: 0;
 }
 
 .box-sidebar:hover button span {

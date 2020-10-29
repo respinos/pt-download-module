@@ -99,6 +99,7 @@ main[data-panel-open="true"] {
   padding: 0;
 
   box-shadow: 4px 4px 4px 0px #333;
+  border: 1px solid #666;
 
   transition: width 0.5s;
 
@@ -107,6 +108,8 @@ main[data-panel-open="true"] {
     display: inline-flex;
     align-items: center;
     height: 3.5rem;
+
+    border-radius: 0;
 
     svg + span {
       margin-left: 0.5rem;
@@ -121,6 +124,7 @@ main[data-panel-open="true"] {
 
   &:hover {
     button {
+      border-radius: 0;
       span {
         position: static;
         width: auto;
