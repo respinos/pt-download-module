@@ -10,30 +10,52 @@ for (var i = 1; i <= 50; i++) {
 }
 container.innerHTML = pageHTML;
 
-// var main = document.querySelector("main");
-// var activePanel;
-// var buttons = document.querySelectorAll(".sidebar button");
-// for (var i = 0; i < buttons.length; i++) {
-//   var button = buttons[i];
-//   button.addEventListener("click", function (e) {
-//     e.preventDefault();
-//     var trigger = this;
-//     var target = this.dataset.target;
-//     if (activePanel) {
-//       var previous = document.querySelector(
-//         `button[data-target="${activePanel.getAttribute("id")}"]`
-//       );
-//       activePanel.classList.remove("active");
-//       previous.dataset.active = false;
-//       if (activePanel.getAttribute("id") == target) {
-//         main.dataset.panelOpen = false;
-//         activePanel = null;
-//         return;
-//       }
-//     }
-//     main.dataset.panelOpen = true;
-//     activePanel = document.getElementById(target);
-//     activePanel.classList.add("active");
-//     trigger.dataset.active = true;
-//   });
-// }
+var main = document.querySelector("main");
+var activePanel;
+var buttons = document.querySelectorAll(".box-sidebar button");
+
+var closeActivePanel = function() {
+  var previous = document.querySelector(
+    `button[data-target="${activePanel.getAttribute("id")}"]`
+  );
+  activePanel.classList.remove("active");
+  previous.dataset.active = false;
+}
+
+var closePanels = function() {
+  main.dataset.panelOpen = false;
+  activePanel = null;
+};
+
+for (var i = 0; i < buttons.length; i++) {
+  var button = buttons[i];
+  button.addEventListener("click", function (e) {
+    e.preventDefault();
+    var trigger = this;
+    var target = this.dataset.target;
+    if (activePanel) {
+      closeActivePanel();
+      if (activePanel.getAttribute("id") == target) {
+        closePanels();
+        return;
+      }
+    }
+    main.dataset.panelOpen = true;
+    activePanel = document.getElementById(target);
+    activePanel.classList.add("active");
+    trigger.dataset.active = true;
+  });
+}
+
+main.addEventListener('click', function(e) {
+    // loop parent nodes from the target to the delegation node
+    for (var target = e.target; target && target != this; target = target.parentNode) {
+        if (target.matches('[data-action="close-panel"]')) {
+            if ( activePanel ) {
+              closeActivePanel();
+              closePanels();
+            }
+            break;
+        }
+    }
+}, false);

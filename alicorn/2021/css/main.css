@@ -71,7 +71,18 @@ main {
 }
 
 main[data-panel-open="true"] .box-main {
-  grid-template-columns: 30% 1fr;
+  grid-template-columns: 40% 1fr;
+}
+
+.bi {
+  display: inline-block;
+  vertical-align: text-bottom;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.bi + span {
+  margin-left: 0.5rem;
 }
 
 .box-sidebar {
@@ -81,8 +92,9 @@ main[data-panel-open="true"] .box-main {
   top: 50%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
-  background: #ddd;
-  min-width: 3.5rem;
+  background: #666;
+  color: #eee;
+  min-width: 3rem;
   overflow: auto;
   overflow-x: hidden;
   z-index: 5000;
@@ -98,7 +110,7 @@ main[data-panel-open="true"] .box-main {
   padding: 0;
   -webkit-box-shadow: 4px 4px 4px 0px #333;
           box-shadow: 4px 4px 4px 0px #333;
-  border: 1px solid #666;
+  border: 1px solid #000;
   -webkit-transition: width 0.5s;
   transition: width 0.5s;
 }
@@ -111,8 +123,14 @@ main[data-panel-open="true"] .box-main {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  height: 3.5rem;
+  height: 3rem;
+  background: #666;
+  color: #eee;
   border-radius: 0;
+}
+
+.box-sidebar button .bi {
+  fill: #eee;
 }
 
 .box-sidebar button svg + span {
@@ -123,6 +141,10 @@ main[data-panel-open="true"] .box-main {
   position: absolute;
   width: 1px;
   clip: rect(1px, 1px, 1px, 1px);
+}
+
+.box-sidebar button.active {
+  background: #000;
 }
 
 .box-sidebar:hover button {
@@ -149,8 +171,9 @@ main[data-panel-open="true"] .box-main {
 }
 
 .box-panels {
-  background: #c0c0c0;
-  padding-left: 3.5rem;
+  background: #fffefb;
+  border-right: 1px solid #666;
+  padding-left: 3.75rem;
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: black orange;
@@ -173,9 +196,73 @@ main[data-panel-open="true"] .box-main {
 .box-panels .panel {
   margin: 1rem;
   padding: 1rem;
-  border: 1px dotted #666;
   min-height: 95%;
-  height: 150vh;
+  display: none;
+}
+
+.box-panels .panel > * + * {
+  margin-bottom: 0.5rem;
+}
+
+.box-panels .panel p + p {
+  margin-top: 1rem;
+}
+
+.box-panels .panel h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.5rem;
+  position: sticky;
+  top: 0;
+  background: #fffefb;
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.box-panels .panel h2 button {
+  padding: 0.4rem;
+}
+
+.box-panels .panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.box-panels .panel ul li {
+  position: relative;
+}
+
+.box-panels .panel form.inline {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.box-panels .panel form.inline .input-control {
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+}
+
+.box-panels .panel form.inline > * + * {
+  margin-left: 0.25rem;
+}
+
+.box-panels .panel.active {
+  display: block;
 }
 
 section.box-reader-main {
@@ -230,6 +317,10 @@ section.box-reader-main .box-reader-toolbar {
           box-shadow: 4px 4px 4px 0px #333;
 }
 
+section.box-reader-main .box-reader-toolbar button {
+  padding: 0.5rem 1rem;
+}
+
 .box-reader .page {
   margin: auto;
   width: 850px;
@@ -276,6 +367,8 @@ section.box-reader-main .box-reader-toolbar {
           flex-grow: 0;
   padding: 0.25rem 0.5rem;
   opacity: 0.05;
+  -webkit-transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
 }
 
 .box-reader .page .page-toolbar button {
@@ -443,4 +536,72 @@ section.box-reader-main .box-reader-toolbar {
 
 .box-reader-toolbar-paginator button + button {
   margin-left: 0.25rem;
+}
+
+dl.item-metadata {
+  margin-top: 1rem;
+}
+
+dl.item-metadata dt {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+dl.item-metadata dd {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+dl.item-metadata dd + dt {
+  margin-top: 1rem;
+}
+
+.mdpEmp {
+  font-weight: bold;
+}
+
+.solr_highlight_1 {
+  background: #ffff00;
+  font-weight: bold;
+}
+
+.solr_highlight_2 {
+  background: #00ff00;
+  font-weight: bold;
+}
+
+.solr_highlight_3 {
+  background: #ff9900;
+  font-weight: bold;
+}
+
+.solr_highlight_4 {
+  background: #00ffcc;
+  font-weight: bold;
+}
+
+.solr_highlight_5 {
+  background: #00cccc;
+  font-weight: bold;
+}
+
+.solr_highlight_6 {
+  background: #0099cc;
+  font-weight: bold;
+}
+
+span.visit {
+  text-decoration: underline;
+  color: #924a0b;
+}
+
+.share-toolbar {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.share-toolbar.btn-group button + button {
+  margin-left: 0;
 }

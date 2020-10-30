@@ -74,9 +74,23 @@ main {
 
 main[data-panel-open="true"] {
   .box-main {
-    grid-template-columns: 30% 1fr;
+    grid-template-columns: 40% 1fr;
   }
 }
+
+.bi {
+    display: inline-block;
+    vertical-align: text-bottom;
+
+    height: 1.5rem;
+    width: 1.5rem;
+
+}
+
+.bi + span {
+  margin-left: 0.5rem;
+}
+
 
 .box-sidebar {
   position: absolute;
@@ -84,8 +98,9 @@ main[data-panel-open="true"] {
   left: 0.25rem;
   top: 50%;
   transform: translateY(-50%);
-  background: #ddd;
-  min-width: 3.5rem;
+  background: #666;
+  color: #eee;
+  min-width: 3rem;
 
   overflow: auto;
   overflow-x: hidden;
@@ -99,7 +114,7 @@ main[data-panel-open="true"] {
   padding: 0;
 
   box-shadow: 4px 4px 4px 0px #333;
-  border: 1px solid #666;
+  border: 1px solid #000;
 
   transition: width 0.5s;
 
@@ -107,9 +122,16 @@ main[data-panel-open="true"] {
     position: relative;
     display: inline-flex;
     align-items: center;
-    height: 3.5rem;
+    height: 3rem;
+
+    background: #666;
+    color: #eee;
 
     border-radius: 0;
+
+    .bi {
+      fill: #eee;
+    }
 
     svg + span {
       margin-left: 0.5rem;
@@ -119,6 +141,10 @@ main[data-panel-open="true"] {
       position: absolute;
       width: 1px;
       clip: rect(1px, 1px, 1px, 1px);
+    }
+
+    &.active {
+      background: #000;
     }
   }
 
@@ -148,8 +174,12 @@ main[data-panel-open="true"] {
 }
 
 .box-panels {
-  background: #c0c0c0;
-  padding-left: 3.5rem;
+  
+  background: rgb(255, 254, 251);
+  // background: #f9f8f5;
+  border-right: 1px solid #666;
+
+  padding-left: 3.75rem;
   overflow: auto;
 
   scrollbar-width: thin;
@@ -172,9 +202,66 @@ main[data-panel-open="true"] {
   .panel {
     margin: 1rem;
     padding: 1rem;
-    border: 1px dotted #666;
+    // border: 1px dotted #666;
     min-height: 95%;
-    height: 150vh;
+    // height: 150vh;
+
+    display: none;
+
+    & > * + * {
+      margin-bottom: 0.5rem;
+    }
+
+    p + p {
+      margin-top: 1rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+      position: sticky;
+      top: 0;
+      background: rgb(255, 254, 251);
+      z-index: 1;
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        padding: 0.4rem;
+      }
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        position: relative;
+      }
+    }
+
+    form.inline {
+      display: flex;
+      align-items: center;
+
+      .input-control {
+        flex: 1 1 auto;
+      }
+
+      > * + * {
+        margin-left: 0.25rem;
+      }
+    }
+
+    &.active {
+      display: block;
+    }
+
   }
 }
 
@@ -220,6 +307,10 @@ section.box-reader-main {
     display: flex;
     justify-content: space-between;
     box-shadow: 4px 4px 4px 0px #333;
+
+    button {
+      padding: 0.5rem 1rem;
+    }
   }
 
 }
@@ -259,6 +350,7 @@ section.box-reader-main {
       padding: 0.25rem 0.5rem;
 
       opacity: 0.05;
+      transition: opacity 0.25s ease-out;
 
       button {
         margin-right: 0.25rem;
@@ -419,4 +511,74 @@ section.box-reader-main {
     margin-left: 0.25rem;
   }
 
+}
+
+dl.item-metadata {
+  margin-top: 1rem;
+
+  dt {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  dd {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  dd + dt {
+    margin-top: 1rem;
+  }
+
+}
+
+// SEARCH TERMS
+.mdpEmp {
+  font-weight: bold;
+}
+
+.solr_highlight_1 {
+    background: #ffff00;
+    font-weight: bold;
+}
+
+.solr_highlight_2 {
+  background: #00ff00;
+  font-weight: bold;
+}
+
+.solr_highlight_3 {
+  background: #ff9900;
+  font-weight: bold;
+}
+
+.solr_highlight_4 {
+  background: #00ffcc;
+  font-weight: bold;
+}
+
+.solr_highlight_5 {
+  background: #00cccc;
+  font-weight: bold;
+}
+
+.solr_highlight_6 {
+  background: #0099cc;
+  font-weight: bold;
+}
+
+span.visit {
+  text-decoration: underline;
+  color: #924a0b;
+}
+
+.share-toolbar {
+  justify-content: flex-start;
+
+  &.btn-group {
+    button + button {
+      margin-left: 0;
+    }
+  }
 }

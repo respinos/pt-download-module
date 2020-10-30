@@ -212,22 +212,6 @@
     <xsl:call-template name="setup-extra-header-extra" />
 
     <style>
-      button[data-target] {
-        display: inline-flex;
-        align-items: center;
-      }
-
-      .bi {
-          display: inline-block;
-          vertical-align: text-bottom;
-
-          height: 2rem;
-          width: 2rem;
-      }
-
-      .bi + span {
-        margin-left: 0.25rem;
-      }
     </style>
   </xsl:template>
 
