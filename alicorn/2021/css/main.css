@@ -127,6 +127,7 @@ main[data-panel-open="true"] .box-main {
   background: #666;
   color: #eee;
   border-radius: 0;
+  padding: 0.5rem 0.75rem;
 }
 
 .box-sidebar button .bi {
