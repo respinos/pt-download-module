@@ -130,7 +130,7 @@
         <span>Bookmark</span>
       </button>
 
-      <button data-target="panel-bookmark">
+      <button data-target="panel-info">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-journal-code</xsl:with-param>
         </xsl:call-template>
@@ -452,6 +452,11 @@
       <xsl:call-template name="build-panel-header">
         <xsl:with-param name="label">Version</xsl:with-param>
       </xsl:call-template>
+      <p>
+        <span class="version-label"><xsl:value-of select="$gVersionLabel" /></span>
+        <br />
+        <a id="versionIcon" href="#">About the version <i class="icomoon icomoon-help" aria-hidden="true"></i></a>
+      </p>
     </div>
   </xsl:template>
 
