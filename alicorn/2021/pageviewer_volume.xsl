@@ -99,7 +99,7 @@
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-download</xsl:with-param>
         </xsl:call-template>
-        <span>Search inside</span>
+        <span>Download</span>
       </button>
 
       <button data-target="panel-configure">
