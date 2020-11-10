@@ -193,7 +193,7 @@
       </div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js" integrity="sha512-vPeZ7JCboHcfpqSx5ZD+/jpEhS4JpXxfz9orSvAPPj0EKUVShU2tgy7XkU+oujBJKnWmu4hU7r9MMQNWPfXsYw==" crossorigin="anonymous"></script>
-    <script src="/PicLoader/index.js"></script>
+    <script src="https://unpkg.com/picloader@0.0.4/index.js"></script>
     <script type="application/javascript" src="/alicorn/2021/js/demo.js"></script>
     <script type="application/javascript" src="/alicorn/2021/js/reader.image.js"></script>
     <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.js"></script> -->
