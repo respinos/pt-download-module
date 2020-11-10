@@ -32,9 +32,12 @@ main {
 
 .box-title {
 
-  padding: 0.25rem;
-  background: #151515;
-  color: #eee;
+  padding: 0 0.25rem;
+  // background: #151515;
+  // color: #eee;
+
+  background: #e0dfdc;
+  color: #333;
 
   border-bottom: 1px solid #eee;
 
@@ -354,7 +357,7 @@ section.box-reader-main {
     // background: $navbar-bgcolor;
     // box-shadow: 4px 4px 4px 0px #333;
 
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem 1rem;
 
     display: flex;
     justify-content: space-between;
@@ -523,14 +526,14 @@ section.box-reader-main {
 
     input[type="range"] {
       margin: auto;
-      padding: 0;
+      padding: 4px;
       flex-grow: 1;
-      height: 8px;
+      height: 16px;
       background-color: $range-gradient-empty;
 
       background: linear-gradient(to right, $range-gradient-fill 0%, $range-gradient-fill 0%, $range-gradient-empty 0%, $range-gradient-empty 100%);
 
-      border: 1px solid #eee;
+      border: 2px solid #eee;
       border-radius: 4px;
       cursor: pointer;
       -webkit-appearance: none;

@@ -26,9 +26,9 @@ main {
 }
 
 .box-title {
-  padding: 0.25rem;
-  background: #151515;
-  color: #eee;
+  padding: 0 0.25rem;
+  background: #e0dfdc;
+  color: #333;
   border-bottom: 1px solid #eee;
 }
 
@@ -355,7 +355,7 @@ section.box-reader-main .box-reader-toolbar {
   width: 85%;
   max-width: 62rem;
   min-height: 3rem;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -534,15 +534,15 @@ section.box-reader-main .box-reader-toolbar button {
 
 .box-reader-toolbar-navigator .navigator-range-wrap input[type="range"] {
   margin: auto;
-  padding: 0;
+  padding: 4px;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  height: 8px;
+  height: 16px;
   background-color: #444;
   background: -webkit-gradient(linear, left top, right top, from(#ff9f1a), color-stop(0%, #ff9f1a), color-stop(0%, #444), to(#444));
   background: linear-gradient(to right, #ff9f1a 0%, #ff9f1a 0%, #444 0%, #444 100%);
-  border: 1px solid #eee;
+  border: 2px solid #eee;
   border-radius: 4px;
   cursor: pointer;
   -webkit-appearance: none;
