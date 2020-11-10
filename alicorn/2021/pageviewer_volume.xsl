@@ -205,12 +205,12 @@
 
     <form class="box-reader-toolbar-navigator">
       <div class="navigator-range-wrap">
-        <input class="navigator-range" type="range" min="1" max="50" value="15" />
+        <input class="navigator-range" type="range" min="1" max="{$totalSeq}" value="{$currentSeq}" />
       </div>
       <div class="navigator-output">
         <!-- <span data-slot="seq">15</span> -->
         <span>#</span>
-        <input type="text" name="navigator-input-seq">
+        <input type="text" name="navigator-input-seq" value="{$currentSeq}">
           <xsl:attribute name="size">
             <xsl:value-of select="string-length($totalSeq)" />
           </xsl:attribute>

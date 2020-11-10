@@ -64,7 +64,7 @@ return LoggedInVar;
 <ItemHandle>https://hdl.handle.net/2027/coo.31924087659631</ItemHandle>
 <CurrentCgi><Param name="id">coo.31924087659631</Param>
 <Param name="view">1up</Param>
-<Param name="seq">11</Param>
+<Param name="seq">250</Param>
 <Param name="debug">xsltwrite</Param>
 <Param name="page">root</Param>
 <Param name="size">100</Param>
