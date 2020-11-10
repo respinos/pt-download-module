@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
+    "@cloudfour/simple-svg-placeholder": "^1.0.2",
     "babel-loader": "^7.1.5",
     "babel-polyfill": "^6.26.0",
     "cozy-sun-bear": "git+https://github.com/mlibrary/cozy-sun-bear.git#hathitrust",

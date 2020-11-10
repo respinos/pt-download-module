@@ -39,7 +39,7 @@
   </xsl:variable>
 
   <xsl:template name="setup-extra-header-extra">
-    <link rel="stylesheet" href="/alicorn/2021/css/main.css" />
+    <link rel="stylesheet" href="/alicorn/2021/css/main2.css" />
   </xsl:template>
 
   <xsl:template name="build-text-only-link">
@@ -74,68 +74,95 @@
 
   <xsl:template name="build-box-sidebar">
     <div class="box-sidebar">
-      <button data-target="panel-about">
+
+      <button class="btn" data-action="action-toggle-toolbar">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-caret-up-fill</xsl:with-param>
+          <xsl:with-param name="class">toggle-on</xsl:with-param>
+        </xsl:call-template>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-caret-down-fill</xsl:with-param>
+          <xsl:with-param name="class">toggle-off</xsl:with-param>
+        </xsl:call-template>
+        <span>Toggle toolbar</span>
+      </button>
+
+
+      <button class="btn" data-target="panel-about">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-info-square</xsl:with-param>
         </xsl:call-template>
         <span>About this item</span>
       </button>
 
-      <button data-target="panel-search">
+      <button class="btn" data-target="panel-search">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-search</xsl:with-param>
         </xsl:call-template>
         <span>Search inside</span>
       </button>
 
-      <button data-target="panel-contents">
+      <button class="btn" data-target="panel-contents">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-list</xsl:with-param>
         </xsl:call-template>
         <span>Contents</span>
       </button>
 
-      <button data-target="panel-download">
+      <button class="btn" data-target="panel-download">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-download</xsl:with-param>
         </xsl:call-template>
         <span>Download</span>
       </button>
 
-      <button data-target="panel-configure">
+      <button class="btn" data-target="panel-configure">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-sliders</xsl:with-param>
         </xsl:call-template>
         <span>Configure</span>
       </button>
 
-      <button data-target="panel-get">
+      <!-- <button class="btn" data-target="panel-get">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-bag-fill</xsl:with-param>
         </xsl:call-template>
         <span>Get this item</span>
-      </button>
+      </button> -->
 
-      <button data-target="panel-share">
+      <button class="btn" data-target="panel-share">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-share-fill</xsl:with-param>
         </xsl:call-template>
         <span>Share</span>
       </button>
 
-      <button data-target="panel-bookmark">
+      <button class="btn" data-target="panel-bookmark">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-bookmark-fill</xsl:with-param>
         </xsl:call-template>
         <span>Bookmark</span>
       </button>
 
-      <button data-target="panel-info">
+      <!-- <button class="btn" data-target="panel-info">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-journal-code</xsl:with-param>
         </xsl:call-template>
         <span>Version</span>
+      </button> -->
+
+      <button class="btn" data-action="action-toggle-fullscreen">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-arrows-fullscreen</xsl:with-param>
+          <xsl:with-param name="class">toggle-on</xsl:with-param>
+        </xsl:call-template>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-fullscreen-exit</xsl:with-param>
+          <xsl:with-param name="class">toggle-off</xsl:with-param>
+        </xsl:call-template>
+        <span>Toggle Fullscreen</span>
       </button>
+
 
     </div>
   </xsl:template>
@@ -147,52 +174,67 @@
       <xsl:call-template name="build-panel-contents" />
       <xsl:call-template name="build-panel-download" />
       <xsl:call-template name="build-panel-configure" />
-      <xsl:call-template name="build-panel-get" />
+      <!-- <xsl:call-template name="build-panel-get" /> -->
       <xsl:call-template name="build-panel-share" />
       <xsl:call-template name="build-panel-bookmark" />
-      <xsl:call-template name="build-panel-info" />
+      <!-- <xsl:call-template name="build-panel-info" /> -->
     </div>
   </xsl:template>
 
   <xsl:template name="build-box-section">
-    <section class="box-reader-main">
-      <div class="box-reader">
+    <section class="box-reader-main" data-view="image">
+      <div class="box-reader-wrap">
+        <div class="box-reader">
+        </div>
       </div>
       <div class="box-reader-toolbar">
         <xsl:call-template name="build-box-reader-toolbar-navigator" />
         <xsl:call-template name="build-box-reader-toolbar-paginator" />
       </div>
     </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js" integrity="sha512-vPeZ7JCboHcfpqSx5ZD+/jpEhS4JpXxfz9orSvAPPj0EKUVShU2tgy7XkU+oujBJKnWmu4hU7r9MMQNWPfXsYw==" crossorigin="anonymous"></script>
+    <script src="/PicLoader/index.js"></script>
     <script type="application/javascript" src="/alicorn/2021/js/demo.js"></script>
+    <script type="application/javascript" src="/alicorn/2021/js/reader.image.js"></script>
+    <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.js"></script> -->
   </xsl:template>
 
   <xsl:template name="build-box-reader-toolbar-navigator">
+    <xsl:variable name="currentSeq" select="//Param[@name='seq']" />
+    <xsl:variable name="totalSeq" select="count(//METS:structMap[@TYPE='physical']/METS:div[@TYPE]/METS:div[@ORDER])" />
+
     <form class="box-reader-toolbar-navigator">
       <div class="navigator-range-wrap">
         <input class="navigator-range" type="range" min="1" max="50" value="15" />
       </div>
       <div class="navigator-output">
-        <span data-slot="seq">15</span>
+        <!-- <span data-slot="seq">15</span> -->
+        <span>#</span>
+        <input type="text" name="navigator-input-seq">
+          <xsl:attribute name="size">
+            <xsl:value-of select="string-length($totalSeq)" />
+          </xsl:attribute>
+        </input>
         <span> / </span>
-        <span data-slot="total-seq">50</span>
+        <span data-slot="total-seq"><xsl:value-of select="$totalSeq" /></span>
       </div>
-      <button>
+      <!-- <button>
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-card-list</xsl:with-param>
         </xsl:call-template>
         <span>Jump...</span>
-      </button>
+      </button> -->
     </form>
   </xsl:template>
 
   <xsl:template name="build-box-reader-toolbar-paginator">
     <div class="box-reader-toolbar-paginator">
-      <button aria-label="Previous">
+      <button class="btn" aria-label="Previous">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-arrow-left-circle-fill</xsl:with-param>
         </xsl:call-template>
       </button>
-      <button aria-label="Next">
+      <button class="btn" aria-label="Next">
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-arrow-right-circle-fill</xsl:with-param>
         </xsl:call-template>
@@ -281,6 +323,25 @@
       <p class="smaller" style="margin-top: 0.25rem">
         <xsl:call-template name="BuildRDFaCCLicenseMarkup" />
       </p>
+
+      <h3 style="border-bottom: none; font-size: 0.9rem; padding-bottom: 0; margin-top: 1rem; margin-bottom: 0">Get this item</h3>
+      <ul>
+        <xsl:call-template name="find-in-library" />
+        <xsl:call-template name="buy-this-item" />
+      </ul>
+
+      <h3 style="border-bottom: none; font-size: 0.9rem; padding-bottom: 0; margin-top: 1rem; margin-bottom: 0">Version</h3>
+      <p>
+        <span class="version-label"><xsl:value-of select="$gVersionLabel" /></span>
+        <!-- <br />
+        <a id="versionIcon" href="#">About the version <i class="icomoon icomoon-help" aria-hidden="true"></i></a> -->
+      </p>
+
+      <p style="font-size: 0.875rem">
+        This is the date when this item was last updated. Version dates are updated when improvements such as higher quality scans or more complete scans have been made. <a href="#">Contact us</a> for more information.
+      </p>
+
+
     </div>
   </xsl:template>
 
@@ -288,7 +349,7 @@
     <xsl:param name="label" />
     <h2>
       <span><xsl:value-of select="$label" /></span>
-      <button data-action="close-panel">
+      <button class="btn" data-action="close-panel">
         <span class="offscreen">Close Panel</span>
         <xsl:call-template name="build-pt-icon">
           <xsl:with-param name="id">bi-x-circle</xsl:with-param>

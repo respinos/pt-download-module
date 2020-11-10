@@ -92,7 +92,10 @@
 
   <xsl:template name="build-pt-icon">
     <xsl:param name="id" />
-    <xsl:apply-templates select="$g-pt-icons//svg:svg[@id=$id]" mode="copy" />
+    <xsl:param name="class" />
+    <xsl:apply-templates select="$g-pt-icons//svg:svg[@id=$id]" mode="copy">
+      <xsl:with-param name="class" select="$class" />
+    </xsl:apply-templates>
   </xsl:template>
 
   <xsl:template name="setup-html-class">
@@ -662,6 +665,27 @@
   </xsl:template>
 
   <xsl:template name="get-tracking-category">PT</xsl:template>
+
+  <xsl:template match="svg:svg" mode="copy" priority="100">
+    <xsl:param name="class" />
+    <xsl:copy>
+      <xsl:apply-templates select="@*" mode="copy">
+        <xsl:with-param name="class" select="$class" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="*" mode="copy" />
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="@class" mode="copy" priority="100">
+    <xsl:param name="class" />
+    <xsl:attribute name="class">
+      <xsl:value-of select="." />
+      <xsl:if test="normalize-space($class)">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$class" />
+      </xsl:if>
+    </xsl:attribute>
+  </xsl:template>
 
 </xsl:stylesheet>
 
