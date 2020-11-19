@@ -26,7 +26,8 @@ main {
   position: relative;
   overflow: hidden;
   display: grid;
-  height: 100%;
+  height: auto;
+  min-height: 0;
   grid-template-rows: min-content 1fr;
 }
 
@@ -71,7 +72,7 @@ main {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 0% 1fr;
-  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -135,6 +136,7 @@ main[data-panel-open="true"] {
     position: relative;
     display: inline-flex;
     align-items: center;
+    justify-content: flex-start;
     height: 3rem;
 
     background: #666;
@@ -171,11 +173,22 @@ main[data-panel-open="true"] {
   }
 
   &:hover {
+
+    // border: 8px solid aliceblue;
+    // padding: 8px;
+
     button {
       border-radius: 0;
+      // background: green;
+      white-space: normal;
+      min-width: 15rem; // safari
       span {
         position: static;
-        width: auto;
+        clip: auto;
+        width: 100%;
+        display: inline-block;
+        text-align: left;
+        // background: yellow;
       }
     }
   }
@@ -319,6 +332,7 @@ section.box-reader-main {
   position: relative;
   display: grid;
   grid-template-rows: 1fr;
+  min-height: 0;
 
   button {
     position: relative;
@@ -334,10 +348,11 @@ section.box-reader-main {
   }
 
   .box-reader {
-    height: 100%;
+    // height: 100%;
     width: 100%;
     // overflow: auto;
     padding: 1rem;
+    min-height: 0;
 
     @media screen and ( max-width: 900px ) {
       padding: 1rem 0;
@@ -379,27 +394,41 @@ section.box-reader-main {
 }
 
 .box-reader {
+
+  display: flex;
+  flex-direction: column;
+
   .page {
     margin: auto;
-    width: var(--width);
-    height: calc(var(--width) * 1.5);
+    // width: var(--width);
+    // height: var(--height);
+    // height: calc(var(--width) * 1.5);
+
+    // width: calc(var(--width) + 2rem);
     
+    border: 4px solid green;
+
+    // -- when pages had background
     // background: #f9f8f5;
     // box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
     // border: 1px solid #ddd;
-
     // box-shadow: 10px 10px 5px 0px rgba(110, 127, 128, 0.75);
 
-    display: flex;
-    align-items: top;
-    justify-content: flex-start;
-    flex-direction: column;
+    // --- page as flex, but...
+    // display: flex;
+    // align-items: top;
+    // justify-content: flex-start;
+    // flex-direction: column;
+
+    // display: grid;
+    // grid-template-rows: min-content 1fr;
+
     position: relative;
 
     // align-items: center;
     // justify-content: center;
 
-    .page-toolbar {
+    .page-toolbar-wrap {
       position: sticky;
       top: 0rem;
       align-self: flex-start;
@@ -410,12 +439,28 @@ section.box-reader-main {
       // background: black;
       // color: yellow;
       flex-grow: 0;
-      padding: 0.25rem 0.5rem;
+      // padding: 0.25rem 0.5rem;
       z-index: 9999;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
 
       // opacity: 0.05;
       transition: opacity 0.25s ease-out;
+
+      .page-toolbar {
+        display: flex;
+        align-self: flex-start;
+        justify-content: flex-end;
+
+        border-radius: 0.25rem;
+        // box-shadow: 0 0 0 4px rgb(57, 56, 58);
+        // background: rgba(57, 56, 58, 1.0);
+
+        // background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAAUAQMAAAB2wMXiAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABlBMVEU5ODr///+IayI6AAAAAXRSTlOArV5bRgAAAAFiS0dEAf8CLd4AAAAHdElNRQfkCwkPGCoZJZsdAAAADElEQVQI12NgIA4AAAAoAAHkd23bAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIwLTExLTA5VDE1OjI0OjQyKzAwOjAwoRCHPwAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMC0xMS0wOVQxNToyNDo0MiswMDowMNBNP4MAAAAASUVORK5CYII=');
+        // background-repeat: repeat-x;
+        // background-position-y: center;
+
+        padding: 0.25rem 0.75rem;
+      }
 
       button {
         margin-right: 0.75rem;
@@ -423,18 +468,23 @@ section.box-reader-main {
           height: 1.5rem;
           width: 1.5rem;
         }
-        box-shadow: 0 0 0 4px rgb(57, 56, 58);
+        box-shadow: 0 0 0 4px rgb(57, 56, 58), 0 0 0 5px rgba(255,255,255,1);
         // box-shadow: 4px 4px 4px 0 #666; // rgb(57, 56, 58);
       }
 
       span {
+        margin-left: -0.25rem;
+        margin-right: -0.25rem;
         background: $navbar-bgcolor;
         color: #ddd;
         padding: 0.5rem 1rem;
         border-radius: 0.25rem;
+
+        box-shadow: 0 0 0 1px rgba(255,255,255,1);
+
         // box-shadow: 4px 4px 4px 0 #666; // rgb(57, 56, 58);
 
-        box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 6px rgb(57, 56, 58),
+        // box-shadow: 0 0 0 2px rgb(255, 255, 255), 0 0 0 6px rgb(57, 56, 58),
 
       }
     }
@@ -453,27 +503,41 @@ section.box-reader-main {
 
     .image {
       flex-grow: 1;
-      height: 100%;
-      width: 100%;
+      // height: 100%;
+      // width: 100%;
+
+      width: var(--width);
+      height: var(--height);
+      margin: 0 auto;
+
       background: #fff;
 
-      padding: 1rem;
-      border: 4px solid #666;
+      // padding: 1rem;
+      // border: 4px solid #666;
 
       display: flex;
       align-items: center;
       justify-content: center;
 
-      opacity: 0.1;
+      // opacity: 0.1;
 
-      background: #f9f8f5;
-      box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
-      border: 1px solid #ddd;
+      // background: #f9f8f5;
+      // box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
+      // border: 1px solid #ddd;
 
       img {
-        height: 100%;
-        max-width: 100%;
+        // height: 100%; // --- stretches
+        // max-width: 100%; // -- prevents the biggest images
+
+        // height: auto; // --- then it doesn't listen to the height attribute
+        width: 100%; 
+
         display: block;
+
+        background: #f9f8f5;
+        box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
+        border: 1px solid #ddd;
+
       }
     }
 
@@ -488,7 +552,7 @@ section.box-reader-main {
     }
 
     & + .page {
-      margin-top: 1rem;
+      margin-top: 3rem;
     }
 
     &:last-of-type {
@@ -496,10 +560,51 @@ section.box-reader-main {
     }
 
     &[data-loaded="true"] {
+      // width: auto;
+      max-width: 100%;
       .image {
         opacity: 1.0;
+        width: auto;
       }
     }
+
+    &[data-rotated="-90"] {
+      .image {
+        img {
+          height: 100%;
+        }
+        transform: rotate(-90deg);
+        margin: calc(calc(calc( ( var(--height) * 0.8 ) - ( var(--width) * 0.8 ) ) * -0.5 ) + 8px );
+        margin-left: auto;
+        margin-right: auto;
+        height: calc(var(--height) * 0.8);
+      }
+    }
+
+    &[data-rotated="-180"] {
+      .image {
+        transform: rotate(-180deg);
+        // margin: calc(calc(calc( var(--height) - var(--width) ) * -0.5 ) + 8px );
+        // margin-left: auto;
+        // margin-right: auto;
+      }
+    }
+
+    &[data-rotated="-270"] {
+      .image {
+        img {
+          height: 100%;
+        }
+        transform: rotate(-270deg);
+        // margin: calc(calc(calc( var(--height) - var(--width) ) ) * -0.5 ) + 8px );
+        margin: calc(calc(calc( ( var(--height) * 0.8 ) - ( var(--width) * 0.8 ) ) * -0.5 ) + 8px );
+        margin-left: auto;
+        margin-right: auto;
+        height: calc(var(--height) * 0.8);
+      }
+    }
+
+
   }
 }
 
@@ -819,30 +924,29 @@ section[data-view="2up"] {
   }
 }
 
+section[data-view="1up"] {
+  .box-reader-wrap {
+    overflow: auto;
+  }
+}
+
 section[data-view="image"] {
 
   // grid-template-rows: minmax(min-content, 1fr);
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
   justify-content: center;
-  align-content: center;
+
+  &.short {
+    align-content: center;
+  }
 
   .box-reader-wrap {
-    // display: grid;
-    // grid-template-rows: min-content;
-    // grid-template-columns: min-content;
-    // align-content: center;
-    // justify-content: center;
-
-    // --- with this you lose the position: sticky
-    // display: block;
 
     display: grid;
     grid-template-rows: max-content;
-    height: 100%;
-
-    // display: grid;
-    // grid-template-rows: 1fr;
+    min-height: 0;
+    height: auto;
 
     width: 100%;
     overflow: auto;
@@ -852,8 +956,7 @@ section[data-view="image"] {
 
     height: auto;
     padding: 0;
-
-    flex-grow: 1;
+    min-height: 0;
 
     display: grid;
     grid-template-areas:
