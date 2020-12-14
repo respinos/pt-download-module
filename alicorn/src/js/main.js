@@ -7,6 +7,8 @@ import {View} from './components/views';
 import debounce from 'lodash/debounce';
 
 var HT = window.HT || {}; window.HT = HT;
+HT.is_dev = false;
+
 var $root = document.querySelector('main');
 var $main = document.querySelector('section#section');
 var $viewer = $main.querySelector('.viewer');
@@ -252,14 +254,33 @@ var Reader = class {
       var recto = this.view.container.querySelector('.slice[data-visible="true"] .page.recto');
       self._updateLinkSeq(document.querySelector(`#pagePdfLink1`), verso ? verso.dataset.seq : null);
       self._updateLinkSeq(document.querySelector(`#pagePdfLink2`), recto ? recto.dataset.seq : null);
+
+      [ [ 'current-recto-seq', recto ], [ 'current-verso-seq', verso ] ].forEach(function(tuple) {
+        var span = document.querySelector(`#sidebar [data-slot="${tuple[0]}"]`);
+        var page = tuple[1];
+        if ( page && page.dataset.seq ) {
+          span.innerText = page.dataset.seq;
+          span.parentNode.previousElementSibling.disabled = false;
+        } else {
+          span.innerText = '-';
+          span.parentNode.previousElementSibling.disabled = true;
+        }
+      })
+
     } else {
-        var $link = document.querySelector("#pagePdfLink");
-        self._updateLinkSeq($link, seq);
+      var $link = document.querySelector("#pagePdfLink");
+      self._updateLinkSeq($link, seq);
+
+      document.querySelector('#sidebar [data-slot="current-seq"]').innerText = seq;
     }
     self._updateLinkSeq(document.querySelector("#pageURL"), seq);
     self._updateLinkSeq(document.querySelector("input[name=seq]"), seq);
     self._updateLinkSeq(document.querySelector("#login-link"), seq);
     self._updateLinkSeq(document.querySelector("#ssd-link"), seq);
+
+    if ( HT.downloader.updateDownloadFormatRangeOptions ) {
+      HT.downloader.updateDownloadFormatRangeOptions();
+    }
   }
 
   _updateViews(view) {
@@ -432,7 +453,8 @@ var service = new Service({
   identifier: HT.params.id,
   q1: HT.params.q1,
   debug: HT.params.debug,
-  hasOcr: $main.dataset.hasOcr == 'true'
+  hasOcr: $main.dataset.hasOcr == 'true',
+  allowFullDownload: $main.dataset.allowFullDownload == 'true'
 })
 HT.service = service;
 
@@ -506,16 +528,13 @@ reader.controls.flexinator.on('track', (trigger) => {
   }
 });
 
-var selectedPagesPdfLink = document.querySelector('#selectedPagesPdfLink');
-if ( selectedPagesPdfLink ) {
+if ( reader.service.allowFullDownload ) {
   reader.controls.selectinator = new Control.Selectinator({
     reader: reader,
-    input: document.querySelector('.table-of-selections'),
-    link: selectedPagesPdfLink,
+    input: document.querySelector('#download-selected-pages-output'),
+    // link: selectedPagesPdfLink,
     reset: document.querySelector('#action-clear-selection')
   });
-} else {
-  document.querySelector('.table-of-selections').querySelector('button').disabled = true;
 }
 
 var _scrollCheck = debounce(function(event) {

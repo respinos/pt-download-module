@@ -1,0 +1,120 @@
+@import "variables";
+// @import "../../../common/web/unicorn/vendor/icomoon/style.scss";
+// @import 'microtip/microtip';
+@import "nav";
+@import "sidebar";
+@import "responsive";
+
+:root {
+  --background: #39383a;
+}
+
+main.main-container {
+}
+
+article.result {
+  margin: 1rem 0 1.5rem;
+
+  h3 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  p.kwic {
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+  }
+}
+
+section {
+  flex-grow: 1;
+}
+
+.results-search-form {
+  margin: 1rem 0;
+  border-bottom: 1px dotted #666;
+  padding-bottom: 1rem;
+
+  label {
+    font-weight: bold;
+  }
+
+  input[type=text] {
+    width: 20rem;
+  }
+}
+
+.mdpEmp {
+  font-weight: bold;
+}
+
+a.worldcat.inline {
+  font-weight: bold;
+}
+
+#mdpTextDeny {
+  .form-inline {
+    margin-top: 1.5rem;
+  }
+}
+
+/* SOLR HIGHLIGHTING */
+.solr_highlight_1 {
+  background: #ffff00;
+  font-weight: bold;
+}
+
+.solr_highlight_2 {
+  background: #00ff00;
+  font-weight: bold;
+}
+
+.solr_highlight_3 {
+  background: #ff9900;
+  font-weight: bold;
+}
+
+.solr_highlight_4 {
+  background: #00ffcc;
+  font-weight: bold;
+}
+
+.solr_highlight_5 {
+  background: #00cccc;
+  font-weight: bold;
+}
+
+.solr_highlight_6 {
+  background: #0099cc;
+  font-weight: bold;
+}
+
+// EPUB
+span.visit {
+  text-decoration: underline;
+  color: $link-color;
+}
+
+ul.results--list {
+  margin-left: 2rem;
+  a {
+    font-weight: normal;
+    font-style: normal; 
+    color: #000;
+    text-decoration: none !important;
+
+    &:hover {
+      color: $link-color !important;
+      text-decoration: underline !important;
+    }
+  }
+}
+
+a.hover span.visit {
+  text-decoration: none;
+  color: #d56d11;
+}
+
+.container .alert--emergency-access {
+  margin-bottom: 1rem;
+}

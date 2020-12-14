@@ -169,6 +169,12 @@
         <xsl:otherwise>false</xsl:otherwise>
       </xsl:choose>
     </xsl:attribute>
+    <xsl:attribute name="data-allow-full-download">
+      <xsl:choose>
+        <xsl:when test="$gFullPdfAccess = 'allow'">true</xsl:when>
+        <xsl:otherwise>false</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
     <xsl:attribute name="data-reading-order"><xsl:value-of select="$readingOrder" /></xsl:attribute>
     <xsl:attribute name="data-total-seq"><xsl:value-of select="$totalSeq" /></xsl:attribute>
     <xsl:attribute name="data-default-seq"><xsl:value-of select="//Manifest/DefaultSeq" /></xsl:attribute>
@@ -463,9 +469,9 @@
         <xsl:call-template name="action-table-of-contents" />
       </div>
 
-      <div class="btn-group table-of-selections" id="selection-contents">
+      <!-- <div class="btn-group table-of-selections" id="selection-contents">
         <xsl:call-template name="action-selection-contents" />
-      </div>
+      </div> -->
 
       <xsl:call-template name="action-search-volume" />
 

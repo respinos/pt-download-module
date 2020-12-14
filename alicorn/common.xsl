@@ -2,11 +2,13 @@
 
 <xsl:stylesheet version="1.0"
   xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:METS="http://www.loc.gov/METS/"
   xmlns:PREMIS="http://www.loc.gov/standards/premis"
-  exclude-result-prefixes="METS PREMIS"
-  >
+  xmlns:exsl="http://exslt.org/common"
+  exclude-result-prefixes="exsl METS PREMIS"
+  extension-element-prefixes="exsl">
 
   <!-- Global Variables -->
   <xsl:variable name="gHtId" select="/MBooksTop/MBooksGlobals/HtId"/>
@@ -843,6 +845,7 @@
     <div class="scrollable">
       <xsl:call-template name="build-extra-sidebar-panels" />
       <xsl:call-template name="get-this-book" />
+      <xsl:call-template name="download-this-book" />
       <xsl:if test="$gHasOcr = 'YES'">
         <xsl:call-template name="access-overview-block" />
       </xsl:if>
@@ -892,7 +895,12 @@
 
     <xsl:variable name="seq" select="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='seq']" />
     <div class="accessOverview panel" rel="note">
-      <h3>Text Only Views</h3>
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-file-text</xsl:with-param>
+        </xsl:call-template>
+        <span>Text Only Views</span>
+      </h3>
         <xsl:if test="$gHtId">
           <p>
             <xsl:text>Go to the </xsl:text>
@@ -949,6 +957,7 @@
 
       <!-- <h3>About this Book</h3> -->
       <!-- <h3 class="offscreen">Catalog Record Details</h3> -->
+
       <h1 style="font-size: 1.2rem">
         <xsl:call-template name="BuildRDFaWrappedTitle">
           <xsl:with-param name="visible_title_string" select="$gTruncTitleString"/>
@@ -956,7 +965,12 @@
         </xsl:call-template>
       </h1>
 
-      <h2 style="margin-top: 1rem">About this Book</h2>
+      <h2 style="margin-top: 1rem">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-info-square</xsl:with-param>
+        </xsl:call-template>
+        <span>About this Book</span>
+      </h2>
 
       <p class="offscreen">
         <!-- <xsl:text> </xsl:text> -->
@@ -993,8 +1007,8 @@
           </xsl:otherwise>
         </xsl:choose>
       </p>
-      <h3 style="border-bottom: none; font-size: 0.9rem; padding-bottom: 0; margin-top: 1rem; margin-bottom: 0">Rights</h3>
-      <p class="smaller" style="margin-top: 0.25rem">
+      <h3 style="border-bottom: none; font-size: 0.9rem; padding-bottom: 0; margin-top: 0.5rem; margin-bottom: 0">Rights</h3>
+      <p class="smaller" style="margin-top: 0.25rem; margin-bottom: 0">
         <xsl:call-template name="BuildRDFaCCLicenseMarkup" />
       </p>
     </div>
@@ -1005,22 +1019,306 @@
   </xsl:template>
 
   <xsl:template name="get-this-book">
-    <xsl:param name="pViewTypeList" select="//MdpApp/ViewTypeLinks"/>
 
-    <div class="getLinks panel">
-      <h3>Get this Book</h3>
-
+    <xsl:variable name="contents-tmp">
       <ul>
-        <xsl:call-template name="find-in-library" />
-        <xsl:call-template name="buy-this-item" />
+         <xsl:call-template name="find-in-library" />
+         <xsl:call-template name="buy-this-item" />
+         <xsl:call-template name="get-service-links" />
+      </ul>
+    </xsl:variable>
+    <xsl:variable name="contents" select="exsl:node-set($contents-tmp)" />
 
-        <xsl:call-template name="download-links">
-          <xsl:with-param name="pViewTypeList" select="$pViewTypeList" />
-         </xsl:call-template>
-     </ul>
-     <xsl:call-template name="no-download-access" />
+    <xsl:if test="$contents//xhtml:li">
+
+      <div class="getLinks panel">
+        <h3>
+          <xsl:call-template name="build-pt-icon">
+            <xsl:with-param name="id">bi-eye</xsl:with-param>
+          </xsl:call-template>
+          <span>Get this Book</span>
+        </h3>
+
+        <xsl:apply-templates select="$contents" mode="copy" />
+
+      </div>
+
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="download-this-book">
+    <xsl:variable name="access-type" select="//AccessType" />
+
+    <div class="download panel" data-experiment="v2">
+
+      <style>
+        .subpanel[data-experiment] { display: none; }
+        .download[data-experiment="v0"] .subpanel[data-experiment="v0"] {
+          display: block;
+        }
+        .download[data-experiment="v1"] .subpanel[data-experiment="v1"] {
+          display: block;
+        }
+        .download[data-experiment="v2"] .subpanel[data-experiment="v2"] {
+          display: block;
+        }
+        .download[data-experiment="v3"] .subpanel[data-experiment="v3"] {
+          display: block;
+        }
+      </style>
+
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-download</xsl:with-param>
+        </xsl:call-template>
+        <span>Download</span>
+      </h3>
+
+      <xsl:choose>
+        <xsl:when test="$access-type/Name = 'emergency_access_affiliate' and $gFinalAccessStatus = 'allow' and $gUsingSearch = 'false' and $gSinglePagePdfAccess != 'allow'">
+          <p>
+            <a data-toggle="tracking" data-tracking-category="outLinks" data-tracking-action="PT ETAS-User-Information#download" data-tracking-label="ETAS-User-Information#download" href="https://www.hathitrust.org/ETAS-User-Information#download">Why isn't download available?</a>
+          </p>
+        </xsl:when>
+        <xsl:otherwise>
+          <!-- <div class="subpanel" data-experiment="v0">
+            <ul>
+              <xsl:call-template name="download-links" />
+            </ul>
+          </div>
+
+          <div class="subpanel" data-experiment="v1">
+            <xsl:call-template name="download-this-book-v1" />
+          </div> -->
+
+          <div class="subpanel" data-experiment="v2">
+            <xsl:call-template name="download-this-book-v2" />
+          </div>
+
+          <!-- <div class="subpanel" data-experiment="v3">
+            <xsl:call-template name="download-this-book-v3" />
+          </div> -->
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <xsl:call-template name="no-download-access" />
+
+      <!-- <script>
+        var dlxd = document.querySelector('.download.panel');
+        var dlxs = document.querySelector('#select-download-v');
+        dlxs.addEventListener('change', function(event) {
+          dlxd.dataset.experiment = dlxs.value;
+        })
+        dlxs.value = 'v2'; // force this
+      </script> -->
     </div>
   </xsl:template>
+
+  <xsl:template name="download-this-book-v2">
+    <xsl:param name="pViewTypeList" select="//MdpApp/ViewTypeLinks"/>
+    <xsl:variable name="access-type" select="//AccessType" />
+
+    <style>
+
+      .download fieldset {
+        margin-top: 0.5rem;
+      }
+
+      .download fieldset legend {
+        /* font-weight: bold; */
+      }
+
+      .download fieldset legend  {
+        margin-bottom: 0.25rem;
+      }
+
+      .download .form-control label {
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        font-size: 0.875rem;
+      }
+
+      .form-control[data-view-target] {
+        display: none;
+      }
+
+      main[data-view="1up"] .form-control[data-view-target~="1up"] {
+        display: block;
+      }
+
+      main[data-view="plaintext"] .form-control[data-view-target~="plaintext"] {
+        display: block;
+      }
+
+      main[data-view="image"] .form-control[data-view-target~="image"] {
+        display: block;
+      }
+
+      main[data-view="2up"] .form-control[data-view-target~="2up"] {
+        display: block;
+      }
+
+      #download-selected-pages-output {
+        font-size: 90%;
+        color: #666;
+        margin-left: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      #download-selected-pages-output ul {
+        display: inline;
+        list-style: none;
+        padding: 0px;
+      }
+
+      #download-selected-pages-output li {
+        display: inline;
+      }      
+
+      #download-selected-pages-output li::after {
+        content: ", ";
+      }
+
+      #download-selected-pages-output li:last-child::after {
+        content: "";
+      }
+
+      .form-download-module input + label {
+        cursor: pointer;
+      }
+
+      .form-download-module input[disabled] + label {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      .form-download-module input[disabled] ~ * {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+    </style>
+
+    <xsl:variable name="show-download-module">
+      <xsl:choose>
+        <xsl:when test="$gFinalAccessStatus = 'deny'">false</xsl:when>
+        <xsl:when test="$gUsingSearch = 'true' and $gFullPdfAccess = 'allow'">true</xsl:when>
+        <xsl:when test="$gFullPdfAccess = 'allow'">true</xsl:when>
+        <xsl:when test="$gSinglePagePdfAccess = 'allow'">true</xsl:when>
+        <xsl:otherwise>false</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:if test="$show-download-module = 'true'">
+
+      <form id="form-download-module" class="form-download-module v2" data-full-pdf-access="{$gFullPdfAccess}">
+        <xsl:choose>
+          <xsl:when test="//UserHasRoleToggles[@activated='enhancedTextProxy'] = 'TRUE'"></xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="data-photocopier"><xsl:value-of select="//InCopyright" /></xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
+
+        <fieldset>
+          <legend>Format</legend>
+
+          <div class="form-control">
+            <input name="download_format" type="radio" id="format-pdf" value="pdf" checked="checked" /> 
+            <label for="format-pdf">PDF</label>
+          </div>
+
+          <xsl:if test="$gFullPdfAccess = 'allow'">
+            <div class="form-control">
+              <input name="download_format" type="radio" id="format-epub" value="epub" /> 
+              <label for="format-epub">EPUB</label>
+            </div>
+          </xsl:if>
+
+          <div class="form-control">
+            <input name="download_format" type="radio" id="format-plaintext" value="plaintext" /> 
+            <label for="format-plaintext">Text (.txt)</label>
+          </div>
+
+          <xsl:if test="$gFullPdfAccess = 'allow'">
+            <div class="form-control">
+              <input name="download_format" type="radio" id="format-archive" value="plaintext-zip" /> 
+              <label for="format-archive">Text (.zip)</label>
+            </div>
+          </xsl:if>
+
+          <div class="form-control">
+            <input name="download_format" type="radio" id="format-image" value="image" /> 
+            <label for="format-image">Image (JPEG)</label>
+          </div>
+
+        </fieldset>
+
+
+        <fieldset>
+          <legend>Range</legend>
+
+          <div class="form-control" data-view-target="1up image plaintext" data-download-format-target="pdf plaintext image">
+            <input name="range" type="radio" id="range-current-page" value="current-page" data-is-partial="true">
+              <xsl:if test="$gFullPdfAccess != 'allow'">
+                <xsl:attribute name="checked">checked</xsl:attribute>
+              </xsl:if>
+            </input>
+            <label for="range-current-page">
+              <xsl:text>Current page scan #</xsl:text>
+              <span data-slot="current-seq"><xsl:value-of select="//Param[@name='seq']" /></span>
+            </label>
+          </div>
+
+          <div class="form-control" data-view-target="2up" data-download-format-target="pdf plaintext image">
+            <input name="range" type="radio" id="range-current-page-verso" value="current-page-verso" data-is-partial="true"/> 
+            <label for="range-current-page-verso">
+              <xsl:text>Left page scan #</xsl:text>
+              <span data-slot="current-verso-seq"><xsl:value-of select="//Param[@name='seq']" /></span>
+            </label>
+          </div>
+
+          <div class="form-control" data-view-target="2up" data-download-format-target="pdf plaintext image">
+            <input name="range" type="radio" id="range-current-page-recto" value="current-page-recto" data-is-partial="true" /> 
+            <label for="range-current-page-recto">
+              <xsl:text>Right page scan #</xsl:text>
+              <span data-slot="current-recto-seq"><xsl:value-of select="//Param[@name='seq']" /></span>
+            </label>
+          </div>
+
+          <xsl:if test="$gFullPdfAccess = 'allow'">
+            <div class="form-control" data-download-format-target="pdf epub plaintext plaintext-zip image">
+              <input name="range" type="radio" id="download-volume" value="volume">
+                <xsl:attribute name="checked">checked</xsl:attribute>
+              </input> 
+              <label for="download-volume">Whole book</label>
+            </div>
+
+            <xsl:if test="$gUsingSearch = 'false'">
+              <div class="form-control" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap" data-download-format-target="pdf plaintext plaintext-zip image">
+                <input name="range" type="radio" id="download-selected-pages" value="selected-pages" data-is-partial="true" /> 
+                <label for="download-selected-pages" style="white-space: nowrap">Selected page scans</label>
+                <button id="action-clear-selection" aria-label="Clear selection" class="btn btn-mini"><i class="icomoon icomoon-cancel"></i></button>
+                <div id="download-selected-pages-output" style="flex-basis: 100%"><ul></ul></div>
+              </div>
+            </xsl:if>
+
+          </xsl:if>
+
+        </fieldset>
+
+        <p style="margin-top: 0.5rem;">
+          <button class="btn" type="submit">Download</button>
+        </p>
+      </form>
+
+      <form id="tunnel-download-module" style="display: none" data-action-template="/cgi/imgsrv/download/" method="GET">
+        <input data-fixed="true" type="hidden" name="id" value="{$gHtId}" />
+        <input data-fixed="true" type="hidden" name="attachment" value="1" />
+      </form>
+
+    </xsl:if>
+  </xsl:template>
+
 
   <xsl:template name="find-in-library">
     <xsl:variable name="x" select="$gMdpMetadata/datafield" />
@@ -1079,6 +1377,14 @@
     </xsl:if>
   </xsl:template>
 
+  <xsl:template name="get-service-links">
+    <xsl:for-each select="//MdpApp/ExternalLinks/Link">
+      <li>
+        <a href="{@href}"><xsl:text>Read at </xsl:text><xsl:value-of select="." /></a>
+      </li>
+    </xsl:for-each>
+  </xsl:template>
+
   <xsl:template name="download-links">
     <xsl:param name="pViewTypeList" select="//MdpApp/ViewTypeLinks"/>
     <xsl:if test="$pViewTypeList//ViewTypePdfLink">
@@ -1087,10 +1393,10 @@
     <xsl:if test="$pViewTypeList//ViewTypeFullPdfLink">
       <xsl:call-template name="download-links--full-pdf" />
     </xsl:if>
-    <xsl:if test="$pViewTypeList//ViewTypeFullPdfLink">
+    <xsl:if test="false() and $pViewTypeList//ViewTypeFullPdfLink">
       <xsl:call-template name="download-links--full-text" />
     </xsl:if>
-    <xsl:if test="$pViewTypeList//ViewTypeFullEpubLink">
+    <xsl:if test="false() and $pViewTypeList//ViewTypeFullEpubLink">
       <xsl:call-template name="download-links--full-epub" />
     </xsl:if>
   </xsl:template>
@@ -1299,10 +1605,10 @@
   <xsl:template name="no-download-access">
     <xsl:param name="type" select="'PDF'" />
     <xsl:if test="$gFullPdfAccess = 'deny'">
-      <div id="noDownloadAccess" style="display: none">
+      <div id="noDownloadAccess" style="display: block; font-size: 90%">
         <xsl:choose>
           <xsl:when test="$gLoggedIn = 'NO' and $gFullPdfAccessMessage = 'NOT_AFFILIATED'">
-            <p class="larger">
+            <p class="">
               <xsl:text>Partner institution members: </xsl:text>
               <strong><a class="trigger-login" data-close-target=".modal.login" href="{DOWNLOAD_LINK}">Login</a></strong>
               <xsl:text> to download this book.</xsl:text>
@@ -1345,7 +1651,13 @@
 
   <xsl:template name="collect-this-book">
     <div class="collectionLinks panel">
-      <h3>Add to Collection</h3>
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-bookmark</xsl:with-param>
+        </xsl:call-template>
+        <span>Add to Collection</span>
+      </h3>
+
       <xsl:call-template name="CollectionWidgetContainer" />
     </div>
   </xsl:template>
@@ -1372,7 +1684,13 @@
     </xsl:variable>
 
     <div class="shareLinks panel">
-      <h3>Share</h3>
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-share-fill</xsl:with-param>
+        </xsl:call-template>
+        <span>Share</span>
+      </h3>
+
 
       <xsl:call-template name="build-share-social-links">
         <xsl:with-param name="pageLink" select="$pageLink" />
@@ -1451,7 +1769,12 @@
   <!-- -->
   <xsl:template name="versionLabel">
     <div class="versionContainer panel">
-      <h3>Version</h3>
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-file-diff</xsl:with-param>
+        </xsl:call-template>
+        <span>Version</span>
+      </h3>
       <p>
         <span class="version-label"><xsl:value-of select="$gVersionLabel" /></span>
         <br />
@@ -1724,7 +2047,6 @@
   <!-- need to move the anchor elsewhere -->
   <xsl:template name="skipNavAnchor">
   </xsl:template>
-
 
 </xsl:stylesheet>
 

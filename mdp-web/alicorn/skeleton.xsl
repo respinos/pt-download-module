@@ -47,6 +47,7 @@
   <xsl:template name="load_base_js" />
 
   <xsl:template match="/MBooksTop">
+    <!--  xmlns:svg="http://www.w3.org/2000/svg" -->
     <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
       <xsl:attribute name="data-analytics-code">
         <xsl:call-template name="get-analytics-code" />
@@ -689,13 +690,51 @@
     <xsl:apply-templates select="@*|*|text()" mode="copy" />
   </xsl:template>
 
+  <xsl:template match="svg" mode="copy" priority="101">
+    <xsl:param name="class" />
+    <!-- <xsl:message>AHOY svg</xsl:message> -->
+    <xsl:copy>
+      <xsl:attribute name="data-animal">seahorse</xsl:attribute>
+      <xsl:apply-templates select="@*" mode="copy">
+        <xsl:with-param name="class" select="$class" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="*" mode="copy" />
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="svg:svg" mode="copy" priority="100">
+    <xsl:param name="class" />
+    <!-- <xsl:message>AHOY svg:svg</xsl:message> -->
+    <xsl:copy>
+      <xsl:attribute name="data-animal">zebra</xsl:attribute>
+      <xsl:apply-templates select="@*" mode="copy">
+        <xsl:with-param name="class" select="$class" />
+      </xsl:apply-templates>
+      <xsl:apply-templates select="*" mode="copy" />
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="node()[name()]" mode="copy" priority="10">
+    <!-- <xsl:message>AHOY node <xsl:value-of select="name()" /></xsl:message> -->
     <xsl:element name="{name()}">
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:element>
   </xsl:template>
 
+  <xsl:template match="@class" mode="copy" priority="100">
+    <xsl:param name="class" />
+    <!-- <xsl:message>AHOY @class</xsl:message> -->
+    <xsl:attribute name="class">
+      <xsl:value-of select="." />
+      <xsl:if test="normalize-space($class)">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="$class" />
+      </xsl:if>
+    </xsl:attribute>
+  </xsl:template>
+
   <xsl:template match="@*|*|text()" mode="copy">
+    <!-- <xsl:message>AHOY DEFAULT</xsl:message> -->
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:copy>

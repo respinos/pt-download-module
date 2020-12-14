@@ -23,68 +23,31 @@ HT.Downloader = {
 
     bindEvents: function() {
         var self = this;
-        // $("a[data-toggle*=download]").addClass("interactive").click(function(e) {
-        $("a[data-toggle*=download]").addClass("interactive");
-        $("body").on("click", "a[data-toggle*=download]", function(e) {            
-            e.preventDefault();
-            bootbox.hideAll();
-            if ( $(this).attr("rel") == 'allow' ) {
-
-                // --- THE MODE IS TOGGLED
-                // if ( this.dataset.photocopier == 'true' && ! sessionStorage.getItem('photocopier.confirmed') ) {
-                //     if ( ! window.confirm(photocopier_message) ) {
-                //         e.stopPropagation();
-                //         return false;
-                //     }
-                //     sessionStorage.setItem('photocopier.confirmed', true);
-                // }
-
-
-                if ( self.options.params.download_progress_base == null ) {
-                    return true;
-                }
-                self.downloadPdf(this);
-            } else {
-                self.explainPdfAccess(this);
-            }
-            return false;
-        })
-
     },
 
     explainPdfAccess: function(link) {
         var html = $("#noDownloadAccess").html();
         html = html.replace('{DOWNLOAD_LINK}', $(this).attr("href"));
         this.$dialog = bootbox.alert(html);
-        // this.$dialog.addClass("login");
     },
 
-    downloadPdf: function(link) {
+    downloadPdf: function(config) {
         var self = this;
-        self.$link = $(link);
-        self.src = $(link).attr('href');
-        self.item_title = $(link).data('title') || 'PDF';
 
-        if ( self.$link.data('range') == 'yes' ) {
-            if ( ! self.$link.data('seq') ) {
-                return;
-            }
-        }
+        self.src = config.src;
+        self.item_title = config.item_title;
+        self.$config = config;
 
         var html =
-            // '<p>Building your PDF...</p>' +
             `<div class="initial"><p>Setting up the download...</div>` +
             `<div class="offscreen" role="status" aria-atomic="true" aria-live="polite"></div>` +
             '<div class="progress progress-striped active hide" aria-hidden="true">' +
                 '<div class="bar" width="0%"></div>' +
             '</div>' +
-            // '<div class="alert alert-block alert-success done hide">' +
-            //     '<p>All done!</p>' +
-            // '</div>' + 
             `<div><p><a href="https://www.hathitrust.org/help_digital_library#DownloadTime" target="_blank">What affects the download speed?</a></p></div>`;
 
         var header = 'Building your ' + self.item_title;
-        var total = self.$link.data('total') || 0;
+        var total = self.$config.selection.pages.length;
         if ( total > 0 ) {
             var suffix = total == 1 ? 'page' : 'pages';
             header += ' (' + total + ' ' + suffix + ')';
@@ -126,8 +89,6 @@ HT.Downloader = {
         );
         self.$status = self.$dialog.find("div[role=status]");
 
-        // self.updateStatusText(`Building your ${self.item_title}.`);
-
         self.requestDownload();
 
     },
@@ -135,9 +96,25 @@ HT.Downloader = {
     requestDownload: function() {
         var self = this;
         var data = {};
-        if ( self.$link.data('seq') ) {
-            data['seq'] = self.$link.data('seq');
+
+        if ( self.$config.selection.pages.length > 0 ) {
+            data['seq'] = self.$config.selection.seq;
         }
+
+        switch (self.$config.downloadFormat) {
+            case 'image':
+                data['format'] = 'image/jpeg';
+                data['target_ppi'] = 300;
+                data['bundle_format'] = 'zip';
+                break;
+            case 'plaintext-zip':
+                data['bundle_format'] = 'zip';
+                break;
+            case 'plaintext':
+                data['bundle_format'] = 'text';
+                break;
+        }
+
         $.ajax({
             url: self.src.replace(/;/g, '&') + '&callback=HT.downloader.startDownloadMonitor',
             dataType: 'script',
@@ -266,11 +243,18 @@ HT.Downloader = {
                     $download_btn.attr('target', '_blank');
                 }
                 $download_btn.appendTo(self.$dialog.find(".modal__footer")).on('click', function(e) {
-                    self.$link.trigger("click.google");
+                    // self.$link.trigger("click.google");
+
+                    HT.analytics.trackEvent({ 
+                        label : '-', 
+                        category : 'PT', 
+                        action : `PT Download - ${self.$config.downloadFormat.toUpperCase()} - ${self.$config.trackingAction}` 
+                    });
+
                     setTimeout(function() {
                         self.$dialog.closeModal();
                         $download_btn.remove();
-                        HT.reader.controls.selectinator._clearSelection();
+                        // HT.reader.controls.selectinator._clearSelection();
                         // HT.reader.emit('downloadDone');
                     }, 1500);
                     e.stopPropagation();
@@ -421,6 +405,11 @@ HT.Downloader = {
 
 }
 
+var downloadForm;
+var downloadFormatOptions;
+var rangeOptions;
+var downloadIdx = 0;
+
 head.ready(function() {
     HT.downloader = Object.create(HT.Downloader).init({
         params : HT.params
@@ -428,60 +417,241 @@ head.ready(function() {
 
     HT.downloader.start();
 
-    var num_page_downloads = 0;
-    $("a[data-photocopier]").on('click', function(e) {
-        if ( this.dataset.photocopier == 'true' ) {
-            if ( num_page_downloads == 0 || ( false && num_page_downloads % 5 == 0 ) ) {
-                if ( ! window.confirm(photocopier_message) ) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            }
-            num_page_downloads += 1;
+    // non-jquery?
+    downloadForm = document.querySelector('#form-download-module');
+    downloadFormatOptions = Array.prototype.slice.call(downloadForm.querySelectorAll('input[name="download_format"]'));
+    rangeOptions = Array.prototype.slice.call(downloadForm.querySelectorAll('[data-download-format-target]'));
+
+    var downloadSubmit = downloadForm.querySelector('[type="submit"]');
+
+    var hasFullPdfAccess = downloadForm.dataset.fullPdfAccess == 'allow';
+
+    var updateDownloadFormatRangeOptions = function(option) {
+      rangeOptions.forEach(function(rangeOption) {
+        var input = rangeOption.querySelector('input');
+        input.disabled = ! rangeOption.matches(`[data-download-format-target~="${option.value}"]`);
+      })
+      
+      if ( ! hasFullPdfAccess ) {
+        var checked = downloadForm.querySelector(`[data-download-format-target][data-view-target~="${HT.reader.view.name}"] input:checked`);
+        if ( ! checked ) {
+            // check the first one
+            var input = downloadForm.querySelector(`[data-download-format-target][data-view-target~="${HT.reader.view.name}"] input`);
+            input.checked = true;
         }
+      }
+    }
+    downloadFormatOptions.forEach(function(option) {
+      option.addEventListener('change', function(event) {
+        updateDownloadFormatRangeOptions(this);
+      })
     })
 
-    // and do this here
-    $("#selectedPagesPdfLink").on('click', function(e) {
-        e.preventDefault();
+    rangeOptions.forEach(function(div) {
+        var input = div.querySelector('input');
+        input.addEventListener('change', function(event) {
+            downloadFormatOptions.forEach(function(formatOption) {
+                formatOption.disabled = ! ( div.dataset.downloadFormatTarget.indexOf(formatOption.value) > -1 );
+            })
+        })
+    })
 
-        var printable = HT.reader.controls.selectinator._getPageSelection();
+    HT.downloader.updateDownloadFormatRangeOptions = function() {
+        var formatOption = downloadFormatOptions.find(input => input.checked);
+        updateDownloadFormatRangeOptions(formatOption);
+    }
 
-        if ( printable.length == 0 ) {
-            var buttons = [];
+    // default to PDF
+    var pdfFormatOption = downloadFormatOptions.find(input => input.value == 'pdf');
+    pdfFormatOption.checked = true;
+    updateDownloadFormatRangeOptions(pdfFormatOption);
 
-            var msg = [ "<p>You haven't selected any pages to print.</p>" ];
-            if ( HT.reader.view.name == '2up' ) {
-                msg.push("<p>To select pages, click in the upper left or right corner of the page.");
-                msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-flip.gif\" /></p>");
-            } else {
-                msg.push("<p>To select pages, click in the upper right corner of the page.");
-                if ( HT.reader.view.name == 'thumb' ) {
-                    msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-thumb.gif\" /></p>");
-                } else {
-                    msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-scroll.gif\" /></p>");
-                }
-            }
-            msg.push("<p><tt>shift + click</tt> to de/select the pages between this page and a previously selected page.");
-            msg.push("<p>Pages you select will appear in the selection contents <button style=\"background-color: #666; border-color: #eee\" class=\"btn square\"><i class=\"icomoon icomoon-papers\" style=\"color: white; font-size: 14px;\" /></button>");
+    var tunnelForm = document.querySelector('#tunnel-download-module');
 
-            msg = msg.join("\n");
+    downloadForm.addEventListener('submit', function(event) {
+        var formatOption = downloadForm.querySelector('input[name="download_format"]:checked');
+        var rangeOption = downloadForm.querySelector('input[name="range"]:checked:not(:disabled)');
 
-            buttons.push({
-                label: "OK",
-                'class' : 'btn-dismiss'
-            });
-            bootbox.dialog(msg, buttons);
+        var printable;
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if ( ! rangeOption ) {
+            // no valid range option was chosen
+            alert("Please choose a valid range for this download format.");
+            event.preventDefault();
             return false;
         }
 
+        var action = tunnelForm.dataset.actionTemplate + ( formatOption.value == 'plaintext-zip' ? 'plaintext' : formatOption.value );
 
-        var seq = HT.reader.controls.selectinator._getFlattenedSelection(printable);
+        var selection = { pages: [] };
+        if ( rangeOption.value == 'selected-pages' ) {
+            selection.pages = HT.reader.controls.selectinator._getPageSelection();
+            selection.isSelection = true;
+            if ( selection.pages.length == 0 ) {
+                var buttons = [];
 
-        $(this).data('seq', seq);
-        HT.downloader.downloadPdf(this);
-    });
+                var msg = [ "<p>You haven't selected any pages to download.</p>" ];
+                if ( HT.reader.view.name == '2up' ) {
+                    msg.push("<p>To select pages, click in the upper left or right corner of the page.");
+                    msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-flip.gif\" /></p>");
+                } else {
+                    msg.push("<p>To select pages, click in the upper right corner of the page.");
+                    if ( HT.reader.view.name == 'thumb' ) {
+                        msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-thumb.gif\" /></p>");
+                    } else {
+                        msg.push("<p class=\"centered\"><img src=\"/pt/web/graphics/view-scroll.gif\" /></p>");
+                    }
+                }
+                msg.push("<p><tt>shift + click</tt> to de/select the pages between this page and a previously selected page.");
+                msg.push("<p>Pages you select will be listed in the download module.");
+
+                msg = msg.join("\n");
+
+                buttons.push({
+                    label: "OK",
+                    'class' : 'btn-dismiss'
+                });
+                bootbox.dialog(msg, buttons);
+
+                event.preventDefault();
+                return false;
+            }
+        } else if ( rangeOption.value.indexOf('current-page') > -1 ) {
+            var page;
+            switch(rangeOption.value) {
+                case 'current-page':
+                    page = [ HT.reader.view.currentLocation() ];
+                    break;
+                case 'current-page-verso':
+                    page = [ HT.reader.view.currentLocation('VERSO') ];
+                    break;
+                case 'current-page-recto':
+                    page = [ HT.reader.view.currentLocation('RECTO') ];
+                    break;
+            }
+            if ( ! page ) {
+                // probably impossible?
+            }
+            selection.pages = [ page ];
+        }
+
+        if ( selection.pages.length > 0 ) {
+            selection.seq = HT.reader.controls.selectinator ?
+                 HT.reader.controls.selectinator._getFlattenedSelection(selection.pages) : 
+                 selection.pages;
+        }
+
+        if ( rangeOption.dataset.isPartial == 'true' && selection.pages.length <= 10 ) {
+
+            // delete any existing inputs
+            tunnelForm.querySelectorAll('input:not([data-fixed])').forEach(function(input) {
+                tunnelForm.removeChild(input);
+            })
+
+            if ( formatOption.value == 'image' ) {
+                var size_attr = "target_ppi";
+                var image_format_attr = 'format';
+                var size_value = "300";
+                if ( selection.pages.length == 1 ) {
+                    // slight difference
+                    action = '/cgi/imgsrv/image';
+                    size_attr = "size";
+                    size_value = "ppi:300";
+                }
+
+                var input = document.createElement('input');
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", size_attr);
+                input.setAttribute("value", size_value);
+                tunnelForm.appendChild(input);
+
+                var input = document.createElement('input');
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", image_format_attr);
+                input.setAttribute("value", 'image/jpeg');
+                tunnelForm.appendChild(input);
+            } else if ( formatOption.value == 'plaintext-zip' ) {
+                var input = document.createElement('input');
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", 'bundle_format');
+                input.setAttribute("value", "zip");
+                tunnelForm.appendChild(input);
+            }
+
+            selection.seq.forEach(function(range) {
+                var input = document.createElement('input');
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "seq");
+                input.setAttribute("value", range);
+                tunnelForm.appendChild(input);
+            })
+
+            tunnelForm.action = action;
+            // HT.disableUnloadTimeout = true;
+
+            // remove old iframes
+            document.querySelectorAll('iframe.download-module').forEach(function(iframe) {
+                document.body.removeChild(iframe);
+            })
+
+            downloadIdx += 1;
+            var tracker = `D${downloadIdx}:`;
+            var tracker_input = document.createElement('input');
+            tracker_input.setAttribute('type', 'hidden');
+            tracker_input.setAttribute('name', 'tracker');
+            tracker_input.setAttribute('value', tracker);
+            tunnelForm.appendChild(tracker_input);
+            var iframe = document.createElement('iframe');
+            iframe.setAttribute('name', `download-module-${downloadIdx}`);
+            iframe.setAttribute('aria-hidden', 'true');
+            iframe.setAttribute('class', 'download-module');
+            iframe.style.opacity = 0;
+            document.body.appendChild(iframe);
+            tunnelForm.setAttribute('target', iframe.getAttribute('name'));
+
+            downloadSubmit.disabled = true;
+            downloadSubmit.classList.add('btn-loading');
+
+            var trackerInterval = setInterval(function() {
+                var value = $.cookie('tracker') || '';
+                if ( HT.is_dev ) {
+                    console.log("--?", tracker, value);
+                }
+                if ( value.indexOf(tracker) > -1 ) {
+                    $.removeCookie('tracker', { path: '/'});
+                    clearInterval(trackerInterval);
+                    downloadSubmit.classList.remove('btn-loading');
+                    downloadSubmit.disabled = false;
+                    HT.disableUnloadTimeout = false;
+                }
+            }, 100);
+
+            tunnelForm.submit();
+
+            return false;
+        }
+
+        var _format_titles = {};
+        _format_titles.pdf = 'PDF';
+        _format_titles.epub = 'EPUB';
+        _format_titles.plaintext = 'Text (.txt)';
+        _format_titles['plaintext-zip'] = 'Text (.zip)';
+        _format_titles.image = 'Image (JPEG)';
+
+        // invoke the downloader
+        HT.downloader.downloadPdf({
+            src: action + '?id=' + HT.params.id,
+            item_title: _format_titles[formatOption.value],
+            selection: selection,
+            downloadFormat: formatOption.value,
+            trackingAction: rangeOption.value
+        });
+
+        return false;
+    })
 
 });
 

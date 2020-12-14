@@ -1,0 +1,232 @@
+$login-panel-bgcolor: #f9f8f5;
+$login-arrow-size: 10px;
+
+.modal.login-panel {
+  position: absolute;
+
+  top: initial;
+  right: 0;
+  left: auto;
+  @include rem(width, 500);
+  margin: 0;
+  margin-top: 2.8rem;
+
+  // overflow: hidden;
+ 
+  color: #4f4f4f;
+  // background-color: $login-bgcolor; // matches the button
+  background-color: #f9f8f5;
+  border-radius: 6px;
+  // border-radius: 0;
+  // box-shadow: 0 3px 7px rgba(0, 0, 0, 0.8);
+
+  .modal-footer {
+    background-color: #f0f0ef;
+    border-radius: 0 0 6px 6px;
+    text-align: left;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    @include rem(padding-left, 32);
+    // pading: 0;
+
+    .questions {
+      // @include rem(margin-top, 16);
+      @include rem(font-size, 16);
+      @include rem(padding, 0);
+      @include rem(padding-top, 0);
+      // @include rem(padding-top, 14);
+      // @include rem(padding-bottom, 8);
+      // background: #f9f8f5 url('../img/homepage/stripes.png');
+      //background-color: #f0f0ef;
+
+      text-align: left;
+      ul {
+        list-style: none;
+
+        li {
+          // line-height: 1.2;
+          @include rem(font-size, 14);
+          @include rem(margin-bottom, 10);
+        }
+      }
+
+      // &:not(:last-child) {
+      //   border-bottom: 1px solid #666;
+      // }
+
+    }
+
+    .questions + .questions {
+      border-top: 1px solid #ddd;
+      margin-top: 0;
+      @include rem(padding-top, 14);
+      @include rem(padding-left, 32);
+      @include rem(margin-left, -32);
+      @include rem(margin-right, -32);
+      p {
+          @include rem(margin-bottom, 14);
+      }
+    }
+  }
+
+  // .login-panel-arrow {
+  //   position: absolute;
+  //   top: -20px;
+  //   left: 20px;
+  //   border-left: 20px solid red; //transparent;
+  //   border-right: 20px solid green; //transparent;
+  //   border-bottom: 20px solid $login-bgcolor;
+  //   width: 0;
+  //   height: 0;
+  //   // -webkit-filter: drop-shadow(0 -2px 2px #AAA);
+  // }
+
+  .login-panel-arrow {
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    height: 0px;
+    width: 25px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0px;
+      right: 1px;
+      border-style: solid;
+      border-width: 0 $login-arrow-size $login-arrow-size $login-arrow-size;
+      border-color: $login-panel-bgcolor transparent;
+      display: block;
+      width: 0;
+      z-index: 1;
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: -($login-arrow-size + 1);
+      right: 0;
+      border-style: solid;
+      border-width: 0 ($login-arrow-size + 1) ($login-arrow-size + 1) ($login-arrow-size + 1);
+      border-color: #000 transparent;
+      display: block;
+      width: 0;
+      z-index: 0;
+    }
+  }
+
+
+
+}
+
+.modal.login-panel {
+
+  .modal-header {
+    border-bottom: 0;
+  }
+
+  .modal-body {
+    // background: transparent;
+    padding: 0;
+    @include rem(padding-bottom, 10);
+    position: relative;
+    border-radius: 6px 6px 0 0;
+
+    div {
+      padding: 32px;
+      padding-top: 0;
+      padding-bottom: 8px;
+    }
+
+    .headline {
+      padding-top: 32px;
+    }
+
+    .headline p {
+      font-size: 16px;
+      margin-bottom: 8px;
+      // font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    .actions {
+      text-align: right;
+
+      .btn-cancel {
+        text-transform: uppercase;
+        @include rem(font-size, 10);
+        color: #6d6d6d;
+
+        padding-right: 24px;
+        position: relative;
+        vertical-align: middle;
+
+        margin-right: 24px;
+
+        &:hover {
+          color: #393839;
+          background: #f1d3d0;
+        }
+
+        &:after {
+          content: "\43";
+          font-family: 'icomoon';
+          font-style: normal;
+          speak: none;
+          font-weight: normal;
+          line-height: 1;
+          -webkit-font-smoothing: antialiased;
+          position: absolute;
+          @include rem(right, 8);
+          @include rem(top, 10);
+          color: red;
+        }
+
+
+      }
+
+      .continue {
+        padding: 4px 12px;
+        padding-right: 32px;
+        margin: auto;
+      }
+    }
+
+  }
+
+  .select2-container {
+    @include rem(font-size, 14);
+
+    input[type=text] {
+      height: 2em;
+    }
+
+    .select2-selection {
+      @include rem(margin-bottom, 10);
+
+      &[aria-expanded=true] {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .select2-container--default .select2-results > .select2-results__options {
+    max-height: 120px;
+  }
+
+
+}
+
+// .modal.login-panel {
+//     &.in {
+//         position: fixed;
+//         margin: 0;
+//         left: 35%;
+//         top: 25%; // 35%?
+//         right: auto;
+//     }
+
+// }

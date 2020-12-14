@@ -103,6 +103,7 @@ export var Service = class {
     this.q1 = options.q1;
     this.debug = options.debug;
     this.hasOcr = options.hasOcr;
+    this.allowFullDownload = options.allowFullDownload;
     this.expiration = options.expiration;
     this.emitter = new NanoEvents();
     this.bindEvents();

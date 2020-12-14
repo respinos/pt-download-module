@@ -15,7 +15,8 @@ export var Selectinator = class {
     // this.options = Object.assign({}, options);
     this.reader = options.reader;
     this.input = options.input;
-    this.datalist = this.input.querySelector('ul.dropdown-menu');
+    this.datalist = this.input.querySelector('ul');
+    // this.datalist = this.input.querySelector('ul.dropdown-menu');
 
     this.link = options.link;
     this.reset = options.reset;
@@ -40,17 +41,17 @@ export var Selectinator = class {
       this._clearSelection();
     }.bind(this));
 
-    this.input.querySelector('button').addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      this.open();
-    });
+    // this.input.querySelector('button').addEventListener('click', (event) => {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    //   this.open();
+    // });
 
     this.datalist.addEventListener('click', (event) => {
       var target = event.target;
       target = target.closest('a');
       if ( target && target.hasAttribute('href') ) {
-        this.modal.closeModal();
+        // this.modal.closeModal();
         event.preventDefault();
         event.stopPropagation();
         var seq = target.dataset.seq;
@@ -237,8 +238,8 @@ export var Selectinator = class {
           msg = msg + " pages";
       }
 
-      this.link.innerText = this.link.dataset.template.replace('{PAGES}', msg);
-      this.link.dataset.total = num_printable;
+      // this.link.innerText = this.link.dataset.template.replace('{PAGES}', msg);
+      // this.link.dataset.total = num_printable;
 
       this.reset.style.visibility = ( num_printable == 0 ? 'hidden' : 'visible' );
 
@@ -287,18 +288,18 @@ export var Selectinator = class {
   _updateSelectionContents(printable) {
       var self = this;
 
-      var msg = this.input.querySelector('.msg');
-      var button = this.input.querySelector('button');
+      // var msg = this.input.querySelector('.msg');
+      // var button = this.input.querySelector('button');
 
       if ( printable.length == 0 ) {
           this.datalist.innerHTML = '';
-          msg.innerText = '';
-          button.disabled = true;
+          // msg.innerText = '';
+          // button.disabled = true;
           return;
       }
 
-      button.disabled = false;
-      msg.innerText = ` ${printable.length} ${printable.length == 1 ? 'page' : 'pages'}`;
+      // button.disabled = false;
+      // msg.innerText = ` ${printable.length} ${printable.length == 1 ? 'page' : 'pages'}`;
 
       this.datalist.innerHTML = '';
 
@@ -309,7 +310,7 @@ export var Selectinator = class {
           if ( typeof(args) == "string" ) {
               var tmp = args.split("-");
               s = tmp[0];
-              postscript += "<span>(" + ( parseInt(tmp[1], 10) - parseInt(tmp[0], 10) + 1 ) + " pages)</span>";
+              // postscript += " <span>(" + ( parseInt(tmp[1], 10) - parseInt(tmp[0], 10) + 1 ) + " pages)</span>";
           }
 
           var li = document.createElement('li');
@@ -320,19 +321,10 @@ export var Selectinator = class {
           }
           link.setAttribute('href', link_href);
           link.dataset.seq = s;
-          link.innerHTML = `<img src="//${window.location.hostname}/cgi/imgsrv/thumbnail?id=${self.reader.identifier};seq=${s};width=75" />${postscript}`
+          // link.innerHTML = `<img src="//${window.location.hostname}/cgi/imgsrv/thumbnail?id=${self.reader.identifier};seq=${s};width=75" />${postscript}`
+          link.innerHTML = `${postscript}`;
           li.appendChild(link);
           self.datalist.appendChild(li);
-
-          // $ul.append('<li><a href="{URL}" data-seq="{SEQ}"><img src="//{HOSTNAME}/cgi/imgsrv/thumbnail?id={ID};seq={SEQ};width=75" />{POSTSCRIPT}</a></li>'
-          //     .replace('{HOSTNAME}', window.location.hostname)
-          //     .replace('{URL}', window.location.href.replace(/seq=\d+/, "seq=" + s))
-          //     .replace(/{SEQ}/g, s)
-          //     .replace(/{ARGS}/g, args)
-          //     .replace(/num=\d+/, '')
-          //     .replace('{ID}', HT.params.id)
-          //     .replace('{POSTSCRIPT}', postscript)
-          // );
       })
   }
 

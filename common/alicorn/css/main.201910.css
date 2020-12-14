@@ -3258,11 +3258,11 @@ symbol g {
 }
 
 .sidebar-container .panel h2, .sidebar-container .panel h3 {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 0.75rem;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
   margin-top: 0;
 }
 
@@ -3620,13 +3620,6 @@ html.gt-ie10 #sidebar, html.ios9 #sidebar {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-}
-
-#action-clear-selection {
-  position: absolute;
-  right: 0;
-  margin-left: -8px;
-  visibility: hidden;
 }
 
 @media only screen and (max-width: 62em) {

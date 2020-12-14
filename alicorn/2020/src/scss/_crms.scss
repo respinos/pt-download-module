@@ -1,0 +1,60 @@
+html.crms {
+
+  #person-nav {
+    margin-left: auto;
+  }
+
+  footer {
+    display: none;
+  }
+
+  #toggle-bib-metadata {
+      margin-top: 4px;
+      display: inline-block;
+  }
+
+  span.blocked {
+      display: block;
+      margin-top: 4px;
+      /*margin-bottom: 2px;*/
+  }
+
+  span.blocked strong {
+      display: block;
+  }
+
+  span.blocked strong::first-letter {
+      text-transform: capitalize;
+  }
+
+  .collectionLinks {
+    display: none;
+  }
+
+  .social-links {
+    display: none;
+  }
+
+  label[for='pageURL'], #pageURL {
+    display: none;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  #form-search-volume {
+    display: none;
+  }
+
+  .action-contents-navigation {
+    max-height: 15rem;
+    overflow: auto;
+  }
+
+  #form-go-page {
+    display: flex !important;
+  }
+
+
+}

@@ -38,6 +38,7 @@
     <Filename>loads_helper_pt.xsl</Filename>
     <Filename>coll.xsl</Filename>
     <Filename>skin.xsl</Filename>
+    <Filename>icons.xsl</Filename>
     <Filename>pageviewer.xsl</Filename>
     <Filename>pageviewer_volume.xsl</Filename>
   </XslFileList>
@@ -180,6 +181,10 @@
     <ApplicationParams><?SETUP_APPLICATION_PARAMS?></ApplicationParams>
 
     <DownloadProgressBase><?DOWNLOAD_PROGRESS_BASE?></DownloadProgressBase>
+
+    <ExternalLinks>
+      <?GOOGLE_BOOK_LINK?>
+    </ExternalLinks>
 
   </MdpApp>
 
