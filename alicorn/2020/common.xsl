@@ -620,7 +620,7 @@
         <xsl:attribute name="data-tracking-category">outLinks</xsl:attribute>
         <xsl:attribute name="data-tracking-action">PT Find in a Library</xsl:attribute>
         <xsl:attribute name="data-tracking-label"><xsl:value-of select="$oclc-number" /></xsl:attribute>
-        <xsl:attribute name="title">Link to OCLC Find in a Library</xsl:attribute>
+        <!-- <xsl:attribute name="title">Link to OCLC Find in a Library</xsl:attribute> -->
 
         <xsl:value-of select="$label" />
 
@@ -690,7 +690,7 @@
             <xsl:element name="img">
               <xsl:attribute name="src">//common-web/graphics/bookmark.gif</xsl:attribute>
               <xsl:attribute name="alt">Bookmark this item</xsl:attribute>
-              <xsl:attribute name="title">Bookmark this item in your browser</xsl:attribute>
+              <!-- <xsl:attribute name="title">Bookmark this item in your browser</xsl:attribute> -->
             </xsl:element>
           </xsl:element>
           <xsl:element name="a">
@@ -842,11 +842,8 @@
     <!-- <xsl:call-template name="build-pre-sidebar-panels" /> -->
 
     <xsl:call-template name="sidebar-about-this-book" />
-
-    <xsl:call-template name="build-extra-sidebar-panels" />
-
+    <!-- <xsl:call-template name="build-extra-sidebar-panels" /> -->
     <!-- <xsl:call-template name="search-this-book" /> -->
-
     <xsl:call-template name="get-this-book" />
     <xsl:call-template name="download-this-book" />
     <xsl:if test="$gHasOcr = 'YES'">
@@ -1000,7 +997,7 @@
               <xsl:attribute name="data-tracking-action">PT VuFind Catalog Record</xsl:attribute>
               <xsl:attribute name="data-tracking-label"><xsl:value-of select="$href" /></xsl:attribute>
               <xsl:attribute name="href"><xsl:value-of select="$href" /></xsl:attribute>
-              <xsl:attribute name="title">Link to the HathiTrust VuFind Record for this item</xsl:attribute>
+              <!-- <xsl:attribute name="title">Link to the HathiTrust VuFind Record for this item</xsl:attribute> -->
               <xsl:text>View full catalog record</xsl:text>
             </xsl:element>
           </xsl:when>
@@ -1018,56 +1015,6 @@
 
   <xsl:template name="display-catalog-record-not-available">
     <xsl:text>Catalog record not available</xsl:text>
-  </xsl:template>
-
-  <xsl:template name="search-this-book">
-    <xsl:if test="$gHasOcr='YES'">
-      <div class="searchItem panel">
-        <h3>
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-search</xsl:with-param>
-          </xsl:call-template>
-          <span>Search in this Book</span>
-        </h3>
-        <form action="/cgi/pt/search" id="form-search-volume-2" class="form-search-volume" role="search" style="display: flex; align-items: center">
-          <label class="offscreen" for="input-search-text">Search text </label>
-          <div class="input-wrap" style="flex: 1 1 auto; margin-right: 0.25rem">
-            <input id="input-search-text" name="q1" type="text" style="width: 100%; margin-bottom: 0; display: block">
-              <xsl:if test="$gHasOcr!='YES'">
-                <xsl:attribute name="disabled">disabled</xsl:attribute>
-              </xsl:if>
-              <xsl:attribute name="placeholder">
-                <xsl:choose>
-                  <xsl:when test="$gHasOcr = 'YES'">
-                    <!-- <xsl:text>Search in this text</xsl:text> -->
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:text>No text to search in this item</xsl:text>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:attribute>
-              <xsl:attribute name="value">
-                <xsl:if test="$gHasOcr = 'YES' and $gCurrentQ1 != '*'">
-                  <xsl:value-of select="$gCurrentQ1" />
-                </xsl:if>
-              </xsl:attribute>
-            </input>
-          </div>
-          <button class="btn" style="display: block" data-trigger="search"><span>Find</span></button>
-          <xsl:apply-templates select="//MdpApp/SearchForm/HiddenVars" />
-          <input type="hidden" name="view" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='view']}" />
-          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='seq']">
-            <input type="hidden" name="seq" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='seq']}" />
-          </xsl:if>
-          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='num']">
-            <input type="hidden" name="num" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='num']}" />
-          </xsl:if>
-          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='debug']">
-            <input type="hidden" name="debug" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='debug']}" />
-          </xsl:if>
-        </form>
-      </div>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="get-this-book">
@@ -1219,6 +1166,10 @@
         display: flex;
       }
 
+      main[data-view="search"] .form-control[data-view-target~="search"] {
+        display: flex;
+      }
+
       #download-selected-pages-output {
         font-size: 90%;
         color: #666;
@@ -1364,7 +1315,7 @@
           </div>
 
           <xsl:if test="$gFullPdfAccess = 'allow'">
-            <div class="form-control" data-view-target="1up 2up image plaintext thumb" data-download-format-target="pdf epub plaintext plaintext-zip image">
+            <div class="form-control" data-view-target="1up 2up image plaintext thumb search" data-download-format-target="pdf epub plaintext plaintext-zip image">
               <input name="range" type="radio" id="download-volume" value="volume">
                 <xsl:attribute name="checked">checked</xsl:attribute>
               </input> 
@@ -1406,6 +1357,7 @@
     </xsl:if>
   </xsl:template>
 
+
   <xsl:template name="find-in-library">
     <xsl:variable name="x" select="$gMdpMetadata/datafield" />
     <xsl:for-each select="$gMdpMetadata/datafield[@tag='035'][contains(.,'OCoLC)ocm') or contains(.,'OCoLC') or contains(.,'oclc') or contains(.,'ocm') or contains(.,'ocn')][1]">
@@ -1439,7 +1391,7 @@
             <xsl:text>https://www.worldcat.org/oclc/</xsl:text>
             <xsl:value-of select="$oclc-number" />
           </xsl:attribute>
-          <xsl:attribute name="title">Link to OCLC Find in a Library</xsl:attribute>
+          <!-- <xsl:attribute name="title">Link to OCLC Find in a Library</xsl:attribute> -->
           <xsl:text>Find in a library</xsl:text>
         </xsl:element>
       </li>
@@ -1466,7 +1418,9 @@
   <xsl:template name="get-service-links">
     <xsl:for-each select="//MdpApp/ExternalLinks/Link">
       <li>
-        <a href="{@href}"><xsl:text>Read at </xsl:text><xsl:value-of select="." /></a>
+        <a href="{@href}" data-toggle="tracking" data-tracking-category="outLinks" data-traction-action="PT Google Books" data-tracking-label="{@href}">
+          <xsl:text>Find at </xsl:text><xsl:value-of select="." />
+        </a>
       </li>
     </xsl:for-each>
   </xsl:template>
@@ -2040,11 +1994,11 @@
     <xsl:apply-templates select="@*|*|text()" mode="copy" />
   </xsl:template>
 
-  <!-- <xsl:template match="@*|*|text()" mode="copy">
+  <xsl:template match="@*|*|text()" mode="copy">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:copy>
-  </xsl:template> -->
+  </xsl:template>
 
   <!-- -->
   <xsl:template match="Highlight">
@@ -2059,11 +2013,11 @@
     <xsl:copy-of select="."/>
   </xsl:template>
 
-  <!-- <xsl:template match="@*|*|text()" mode="copy">
+  <xsl:template match="@*|*|text()" mode="copy">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:copy>
-  </xsl:template> -->
+  </xsl:template>
 
   <xsl:template name="heading1">
     <xsl:element name="h1">
