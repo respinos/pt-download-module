@@ -195,9 +195,6 @@ export var Scroll = class extends Base {
       page.querySelector('.action-load-page').setAttribute('tabindex', '-1');
     })
 
-    this.intervals = {};
-    // this.intervals.loader = setInterval(debounce(this.loadPages.bind(this)), 500);
-    this.intervals.unloader = setInterval(this.unloadPages.bind(this), 5000);
   }
 
   bindPageEvents(page) {
@@ -206,6 +203,7 @@ export var Scroll = class extends Base {
 
   clickHandler(event) {
     var element = event.target;
+    super.clickHandler(event);
     if ( element.tagName.toLowerCase() == 'button' && element.classList.contains('action-load-page') ) {
       event.preventDefault();
       event.stopPropagation();
@@ -221,53 +219,53 @@ export var Scroll = class extends Base {
     }
   }
 
-  unloadPages() {
-    // if ( setfn.eqSet(this.sets.visible, this.sets.unloaded) ) { return; }
-    // this.sets.unloaded = new Set(this.sets.visible);
+  // unloadPages() {
+  //   // if ( setfn.eqSet(this.sets.visible, this.sets.unloaded) ) { return; }
+  //   // this.sets.unloaded = new Set(this.sets.visible);
 
-    var pages = this.container.querySelectorAll('.page[data-loaded="true"]');
-    var possibles = new Set();
-    pages.forEach((page) => possibles.add(page.dataset.seq));
-    if ( setfn.eqSet(this.sets.unloaded, possibles )) { return ; }
-    this.sets.unloaded = possibles;
+  //   var pages = this.container.querySelectorAll('.page[data-loaded="true"]');
+  //   var possibles = new Set();
+  //   pages.forEach((page) => possibles.add(page.dataset.seq));
+  //   if ( setfn.eqSet(this.sets.unloaded, possibles )) { return ; }
+  //   this.sets.unloaded = possibles;
 
-    var nearest = 5;
-    var visible = this.sets.visible;
+  //   var nearest = 5;
+  //   var visible = this.sets.visible;
 
-    var now = Date.now();
-    var tmp = [...visible].sort((a,b) => { return a - b});
-    var seq1 = parseInt(tmp[0], 10);
-    var seq2 = parseInt(tmp[1], 10);
+  //   var now = Date.now();
+  //   var tmp = [...visible].sort((a,b) => { return a - b});
+  //   var seq1 = parseInt(tmp[0], 10);
+  //   var seq2 = parseInt(tmp[1], 10);
 
-    pages.forEach((page) => {
-      var seq = parseInt(page.dataset.seq, 10);
-      if ( ! this.isVisible(page) ) {
-        if ( ! ( ( Math.abs(seq - seq1) <= nearest ) || ( Math.abs(seq - seq2) <= nearest ) ) ) {
-          this.unloadImage(page);
-          console.log("<<", seq);
-        } else {
-          console.log("**", seq);
-        }
-      }
-    })
+  //   pages.forEach((page) => {
+  //     var seq = parseInt(page.dataset.seq, 10);
+  //     if ( ! this.isVisible(page) ) {
+  //       if ( ! ( ( Math.abs(seq - seq1) <= nearest ) || ( Math.abs(seq - seq2) <= nearest ) ) ) {
+  //         this.unloadImage(page);
+  //         console.log("<<", seq);
+  //       } else {
+  //         console.log("**", seq);
+  //       }
+  //     }
+  //   })
 
-    // for(const [seq, page] of Object.entries(this.pagesIndex)) {
-    //   if ( ! this.isVisible(page) && page.dataset.loaded == 'true' ) {
-    //     if ( ! ( ( Math.abs(seq - seq1) <= nearest ) || ( Math.abs(seq - seq2) <= nearest ) ) ) {
-    //       this.unloadImage(page);
-    //       // page.dataset.loaded = 'false';
-    //       // page.dataset.isLeaving = false;
+  //   // for(const [seq, page] of Object.entries(this.pagesIndex)) {
+  //   //   if ( ! this.isVisible(page) && page.dataset.loaded == 'true' ) {
+  //   //     if ( ! ( ( Math.abs(seq - seq1) <= nearest ) || ( Math.abs(seq - seq2) <= nearest ) ) ) {
+  //   //       this.unloadImage(page);
+  //   //       // page.dataset.loaded = 'false';
+  //   //       // page.dataset.isLeaving = false;
 
-    //       // var img = page.querySelector('img');
-    //       // // img.src = img.dataset.thumbnailSrc;
-    //       // img.src = img.dataset.thumbnailSrc || img.dataset.placeholderSrc;
+  //   //       // var img = page.querySelector('img');
+  //   //       // // img.src = img.dataset.thumbnailSrc;
+  //   //       // img.src = img.dataset.thumbnailSrc || img.dataset.placeholderSrc;
 
-    //     } else {
-    //       console.log("**", page.dataset.seq);
-    //     }
-    //   }
-    // }
-  }
+  //   //     } else {
+  //   //       console.log("**", page.dataset.seq);
+  //   //     }
+  //   //   }
+  //   // }
+  // }
 
   loadPages() {
     // this.sets.visible = this.debugScrolled();
@@ -319,7 +317,7 @@ export var Scroll = class extends Base {
     }
     this.observer = null;
     // clearInterval(this.intervals.loader);
-    clearInterval(this.intervals.unloader);
+    // clearInterval(this.intervals.unloader);
   }
 
 };

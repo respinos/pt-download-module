@@ -78,7 +78,7 @@ html, body {
   height: 3.25rem;
   display: block;
   padding: 0;
-  z-index: 9000;
+  z-index: 24;
   opacity: 0.5;
 }
 
@@ -221,7 +221,7 @@ body[data-zoomed-in="true"] .app--reader--container {
   overflow: hidden;
 }
 
-.app--reader[data-view="1up"] .app--reader--container, .app--reader[data-view="thumb"] .app--reader--container {
+.app--reader[data-view="1up"] .app--reader--container, .app--reader[data-view="thumb"] .app--reader--container, .app--reader[data-view="image"] .app--reader--container, .app--reader[data-view="plaintext"] .app--reader--container {
   overflow: auto;
 }
 
@@ -263,14 +263,259 @@ body[data-zoomed-in="true"] .app--reader--container {
       align-content: center;
 }
 
-.app--reader[data-view="image"] .app--reader--container {
+.app--reader[data-view="image"] .app--reader--viewer {
   display: grid;
-  grid-template-rows: -webkit-max-content;
-  grid-template-rows: max-content;
   min-height: 0;
   height: auto;
   width: 100%;
+  grid-template-areas: "page";
+  grid-template-rows: 1fr;
+  grid-template-columns: -webkit-min-content;
+  grid-template-columns: min-content;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer.animating {
+  overflow: hidden;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer::after {
+  display: block;
+  content: "";
+  height: 6rem;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  grid-area: page;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 0s linear 300ms, opacity 300ms;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+  margin-bottom: 4rem;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page[data-visible="true"] {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition: visibility 0s linear 0s, opacity 300ms;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page[data-visible="false"] .image {
+  height: 0 !important;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page .image img {
+  height: 100%;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--foldout .image {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveToLeft {
+  -webkit-animation: imageMoveToLeft .6s ease both;
+          animation: imageMoveToLeft .6s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveFromRight {
+  -webkit-animation: imageMoveFromRight .6s ease both;
+          animation: imageMoveFromRight .6s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveFromRightFade {
+  -webkit-animation: imageMoveFromRightFade 0.4s ease both;
+          animation: imageMoveFromRightFade 0.4s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveToRight {
+  -webkit-animation: imageMoveToRight .6s ease both;
+          animation: imageMoveToRight .6s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveFromLeft {
+  -webkit-animation: imageMoveFromLeft .6s ease both;
+          animation: imageMoveFromLeft .6s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--moveFromLeftFade {
+  -webkit-animation: imageMoveFromLeftFade 0.4s ease both;
+          animation: imageMoveFromLeftFade 0.4s ease both;
+}
+
+.app--reader[data-view="image"] .app--reader--viewer .page.page--fade {
+  -webkit-animation: imageFade 0.7s ease both;
+          animation: imageFade 0.7s ease both;
+}
+
+.app--reader[data-view="plaintext"] {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.app--reader[data-view="plaintext"].short {
+  -ms-flex-line-pack: center;
+      align-content: center;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer {
+  display: grid;
+  min-height: 0;
+  height: auto;
+  width: 100%;
+  grid-template-areas: "page";
+  grid-template-rows: 1fr;
+  grid-template-columns: 85%;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer.animating {
+  overflow: hidden;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer::after {
+  display: block;
+  content: "";
+  height: 6rem;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  grid-area: page;
+  visibility: hidden;
+  opacity: 0;
+  width: 100%;
+  margin-bottom: 4rem;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page[data-visible="true"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page[data-visible="false"] .page-text {
+  height: 0 !important;
+  min-height: 0;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  position: static !important;
+  height: auto;
+  width: auto;
   overflow: auto;
+  clip: unset;
+  -webkit-clip-path: none;
+          clip-path: none;
+  max-width: 80rem;
+  min-height: 50vh;
+  padding: 1rem;
+  padding-top: 2rem;
+  background: #fff;
+  -webkit-box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
+          box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
+  border: 1px solid #ddd;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text .ocr_page, .app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text .ocrx_block {
+  font-size: inherit;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text .ocrx_block {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text .ocr_page[data-force-breaks="true"] .ocr_line {
+  display: block;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text [data-line-break] + [data-line-break] {
+  display: block;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text [data-end-paragraph]::after {
+  content: "";
+  display: table;
+  margin-bottom: 1rem;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page .page-text .alert-block {
+  width: 100%;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page[data-loaded="false"] .page-text {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 6rem;
+  opacity: 0.4;
+  color: #666;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveToLeft {
+  -webkit-animation: imageMoveToLeft .6s ease both;
+          animation: imageMoveToLeft .6s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveFromRight {
+  -webkit-animation: imageMoveFromRight .6s ease both;
+          animation: imageMoveFromRight .6s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveFromRightFade {
+  -webkit-animation: imageMoveFromRightFade 0.4s ease both;
+          animation: imageMoveFromRightFade 0.4s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveToRight {
+  -webkit-animation: imageMoveToRight .6s ease both;
+          animation: imageMoveToRight .6s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveFromLeft {
+  -webkit-animation: imageMoveFromLeft .6s ease both;
+          animation: imageMoveFromLeft .6s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--moveFromLeftFade {
+  -webkit-animation: imageMoveFromLeftFade 0.4s ease both;
+          animation: imageMoveFromLeftFade 0.4s ease both;
+}
+
+.app--reader[data-view="plaintext"] .app--reader--viewer .page.page--fade {
+  -webkit-animation: imageFade 0.7s ease both;
+          animation: imageFade 0.7s ease both;
 }
 
 .app--reader[data-view="2up"] {
@@ -280,6 +525,150 @@ body[data-zoomed-in="true"] .app--reader--container {
           justify-content: center;
   -ms-flex-line-pack: center;
       align-content: center;
+}
+
+.app--reader[data-view="2up"] .app--reader--container {
+  min-width: 0;
+  overflow: auto;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer {
+  display: grid;
+  grid-template-areas: "verso recto";
+  grid-template-rows: 1fr;
+  grid-template-columns: -webkit-min-content -webkit-min-content;
+  grid-template-columns: min-content min-content;
+  grid-gap: 0rem;
+  padding-top: 3rem;
+  margin-bottom: 4rem;
+  min-width: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page .page--toolbar {
+  position: static !important;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page .image {
+  max-height: var(--max-page-height, none);
+  background: transparent;
+  border: none;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page .image img {
+  width: auto;
+  height: 100%;
+  border: 1px solid #ddd;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page[data-reframed="true"] .image {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAAG0lEQVQIW2O8c+fOTCEhIYZ3794xgGhGKggAAJf0H/UWcK5GAAAAAElFTkSuQmCC);
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page[data-reframed="true"].verso .image {
+  border-left: 4px solid #666;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page[data-reframed="true"].recto .image {
+  border-right: 4px solid #666;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page[data-visible="true"] {
+  opacity: 1;
+  visibility: visible;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page:last-of-type {
+  margin-bottom: auto;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.recto {
+  grid-area: recto;
+  -webkit-transform-origin: 0% 0%;
+          transform-origin: 0% 0%;
+  margin-left: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.recto.page--flipToLeft {
+  -webkit-animation: flip-hide-recto 0.5s forwards ease;
+          animation: flip-hide-recto 0.5s forwards ease;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.recto.page--flipToRight {
+  -webkit-animation: flip-show-recto 0.5s forwards ease;
+          animation: flip-show-recto 0.5s forwards ease;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.recto.page--flippingToLeft {
+  z-index: 1;
+  visibility: visible;
+  opacity: 1;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.recto .image {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: start;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso {
+  grid-area: verso;
+  -webkit-transform-origin: 100% 0%;
+          transform-origin: 100% 0%;
+  margin-right: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso.page--flippingToRight {
+  z-index: 1;
+  visibility: visible;
+  opacity: 1;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso.page--flipToRight {
+  -webkit-animation: flip-hide-verso 0.5s forwards ease;
+          animation: flip-hide-verso 0.5s forwards ease;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso.page--flipToLeft {
+  -webkit-animation: flip-show-verso 0.5s forwards ease;
+          animation: flip-show-verso 0.5s forwards ease;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso .page--toolbar {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso .page--toolbar .tag {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: row-reverse;
+          flex-direction: row-reverse;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page.verso .image {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page + .page {
+  margin-top: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page:first-of-type {
+  margin-top: 0;
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer .page:last-of-type {
+  margin-bottom: 0;
 }
 
 .app---reader--toolbar--options {
@@ -294,8 +683,8 @@ body[data-zoomed-in="true"] .app--reader--container {
   -webkit-box-align: start;
       -ms-flex-align: start;
           align-items: flex-start;
-  right: 1.5rem;
-  z-index: 25;
+  right: 0;
+  z-index: 23;
   background: transparent;
   pointer-events: none;
 }
@@ -490,7 +879,7 @@ body[data-zoomed-in="true"] .app--reader--container {
 }
 
 .app---reader--toolbar {
-  z-index: 5000;
+  z-index: 23;
   position: absolute;
   bottom: 0.75rem;
   left: 50%;
@@ -599,6 +988,7 @@ body[data-zoomed-in="true"] .app--reader--container {
   background: transparent;
   border: transparent;
   margin-right: 0;
+  padding: 0 0.5rem;
 }
 
 .app--reader--viewer .page .tag button svg {
@@ -606,6 +996,9 @@ body[data-zoomed-in="true"] .app--reader--container {
   width: 2rem;
   stroke: white;
   fill: white;
+}
+
+.app--reader--viewer .page .tag button[data-action="toggle"] svg {
   display: none;
 }
 
@@ -862,8 +1255,23 @@ body[data-zoomed-in="true"] .app--reader--container {
   position: static !important;
 }
 
+.app--reader[data-view="1up"] .app--reader--viewer .page.page--foldout .image {
+  -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+}
+
 .app--reader[data-view="1up"] button[data-target="1up"] {
   background: rgba(0, 0, 0, 0.8);
+}
+
+.app--reader[data-view="2up"] .app--reader--viewer {
+  grid-template-rows: 1fr;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  padding-right: 2rem;
 }
 
 .app--reader[data-view="2up"] button[data-target="2up"] {
@@ -910,4 +1318,235 @@ body[data-zoomed-in="true"] .app--reader--container {
 
 .highlight_6 {
   background: #0099cc;
+}
+
+.modal.lightbox.is-open .modal__container .modal__content {
+  padding: 0;
+  max-height: 98vh;
+}
+
+.modal.lightbox.is-open .modal__container .modal__content img {
+  max-height: 100%;
+}
+
+.modal.lightbox.is-open .modal__container .modal__header {
+  padding: .5rem 1rem;
+}
+
+.modal.lightbox.is-open .modal__container .modal__header .modal__title {
+  font_size: 1rem;
+}
+
+.modal.lightbox.is-open .modal__container .modal__footer {
+  padding: .5rem 1rem;
+}
+
+@-webkit-keyframes flip-show-recto {
+  from {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+  to {
+    z-index: 1;
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+  }
+}
+
+@keyframes flip-show-recto {
+  from {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+  to {
+    z-index: 1;
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+  }
+}
+
+@-webkit-keyframes flip-hide-verso {
+  from {
+  }
+  to {
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+}
+
+@keyframes flip-hide-verso {
+  from {
+  }
+  to {
+    -webkit-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+  }
+}
+
+@-webkit-keyframes flip-hide-recto {
+  from {
+    z-index: 2;
+  }
+  to {
+    -webkit-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+  }
+}
+
+@keyframes flip-hide-recto {
+  from {
+    z-index: 2;
+  }
+  to {
+    -webkit-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+  }
+}
+
+@-webkit-keyframes flip-show-verso {
+  from {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+  }
+  to {
+    z-index: 1;
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+  }
+}
+
+@keyframes flip-show-verso {
+  from {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1;
+    -webkit-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+  }
+  to {
+    z-index: 1;
+    -webkit-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+  }
+}
+
+@-webkit-keyframes imageMoveToLeft {
+  from {
+  }
+  to {
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@keyframes imageMoveToLeft {
+  from {
+  }
+  to {
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@-webkit-keyframes imageMoveFromRight {
+  from {
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@keyframes imageMoveFromRight {
+  from {
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@-webkit-keyframes imageMoveFromRightFade {
+  from {
+    opacity: 0.3;
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@keyframes imageMoveFromRightFade {
+  from {
+    opacity: 0.3;
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@-webkit-keyframes imageMoveToRight {
+  from {
+  }
+  to {
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@keyframes imageMoveToRight {
+  from {
+  }
+  to {
+    -webkit-transform: translateX(200%);
+            transform: translateX(200%);
+  }
+}
+
+@-webkit-keyframes imageMoveFromLeft {
+  from {
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@keyframes imageMoveFromLeft {
+  from {
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@-webkit-keyframes imageMoveFromLeftFade {
+  from {
+    opacity: 0.3;
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@keyframes imageMoveFromLeftFade {
+  from {
+    opacity: 0.3;
+    -webkit-transform: translateX(-200%);
+            transform: translateX(-200%);
+  }
+}
+
+@-webkit-keyframes imageFade {
+  from {
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes imageFade {
+  from {
+  }
+  to {
+    opacity: 0;
+  }
 }

@@ -138,6 +138,10 @@ export var Thumbnail = class extends Scroll {
     // }
   }
 
+  _checkForFoldouts(image, page) {
+    /* NO OP */
+  }
+
   redrawPageImages() {
     this._redrawPageImagesTimer = null;
   }
@@ -164,6 +168,7 @@ export var Thumbnail = class extends Scroll {
     var retval = super.config();
     retval.zoom = true;
     retval.rotate = false;
+    retval.foldouts = false;
     return retval;
   }
 

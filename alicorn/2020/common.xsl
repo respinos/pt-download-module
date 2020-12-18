@@ -1017,6 +1017,56 @@
     <xsl:text>Catalog record not available</xsl:text>
   </xsl:template>
 
+  <xsl:template name="search-this-book">
+    <xsl:if test="$gHasOcr='YES'">
+      <div class="searchItem panel">
+        <h3>
+          <xsl:call-template name="build-pt-icon">
+            <xsl:with-param name="id">bi-search</xsl:with-param>
+          </xsl:call-template>
+          <span>Search in this Book</span>
+        </h3>
+        <form action="/cgi/pt/search" id="form-search-volume-2" class="form-search-volume" role="search" style="display: flex; align-items: center">
+          <label class="offscreen" for="input-search-text">Search text </label>
+          <div class="input-wrap" style="flex: 1 1 auto; margin-right: 0.25rem">
+            <input id="input-search-text" name="q1" type="text" style="width: 100%; margin-bottom: 0; display: block">
+              <xsl:if test="$gHasOcr!='YES'">
+                <xsl:attribute name="disabled">disabled</xsl:attribute>
+              </xsl:if>
+              <xsl:attribute name="placeholder">
+                <xsl:choose>
+                  <xsl:when test="$gHasOcr = 'YES'">
+                    <!-- <xsl:text>Search in this text</xsl:text> -->
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>No text to search in this item</xsl:text>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:attribute>
+              <xsl:attribute name="value">
+                <xsl:if test="$gHasOcr = 'YES' and $gCurrentQ1 != '*'">
+                  <xsl:value-of select="$gCurrentQ1" />
+                </xsl:if>
+              </xsl:attribute>
+            </input>
+          </div>
+          <button class="btn" style="display: block" data-trigger="search"><span>Find</span></button>
+          <xsl:apply-templates select="//MdpApp/SearchForm/HiddenVars" />
+          <input type="hidden" name="view" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='view']}" />
+          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='seq']">
+            <input type="hidden" name="seq" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='seq']}" />
+          </xsl:if>
+          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='num']">
+            <input type="hidden" name="num" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='num']}" />
+          </xsl:if>
+          <xsl:if test="/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='debug']">
+            <input type="hidden" name="debug" value="{/MBooksTop/MBooksGlobals/CurrentCgi/Param[@name='debug']}" />
+          </xsl:if>
+        </form>
+      </div>
+    </xsl:if>
+  </xsl:template>
+  
   <xsl:template name="get-this-book">
 
     <xsl:variable name="contents-tmp">
@@ -1994,11 +2044,11 @@
     <xsl:apply-templates select="@*|*|text()" mode="copy" />
   </xsl:template>
 
-  <xsl:template match="@*|*|text()" mode="copy">
+  <!-- <xsl:template match="@*|*|text()" mode="copy">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:copy>
-  </xsl:template>
+  </xsl:template> -->
 
   <!-- -->
   <xsl:template match="Highlight">
@@ -2013,11 +2063,11 @@
     <xsl:copy-of select="."/>
   </xsl:template>
 
-  <xsl:template match="@*|*|text()" mode="copy">
+  <!-- <xsl:template match="@*|*|text()" mode="copy">
     <xsl:copy>
       <xsl:apply-templates select="@*|*|text()" mode="copy" />
     </xsl:copy>
-  </xsl:template>
+  </xsl:template> -->
 
   <xsl:template name="heading1">
     <xsl:element name="h1">

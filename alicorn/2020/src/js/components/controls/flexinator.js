@@ -40,6 +40,7 @@ export var Flexinator = class {
       this.$sidebar.removeAttribute('hidden');
       $("header").show();
       $("footer").show();
+      document.body.dataset.sidebarState = 'open';
       this.emitter.emit("track", "sidebar-expanded:true");
       this.reader.emit('resize');
     } else {
@@ -50,6 +51,7 @@ export var Flexinator = class {
       $("footer").hide();
       this.emitter.emit("track", "sidebar-expanded:false");
       this.reader.emit('resize');
+      document.body.dataset.sidebarState = 'closed';
     }
   }
 

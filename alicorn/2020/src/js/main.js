@@ -61,7 +61,7 @@ var Reader = class {
       }
     }
     if ( params.scale ) { this.options.scale = params.scale; }
-    this.setView({ view: $root.dataset.view });
+    this.setView({ view: $root.dataset.view, seq: ( params.seq || 1 ) });
     setTimeout(function() {
       this.view.attachTo($main, cb);
     }.bind(this), 0);
@@ -91,7 +91,7 @@ var Reader = class {
     var t0 = performance.now();
     var cls = View.for(params.view);
     var t1 = performance.now();
-    this.view = new cls({ reader: this, service: this.service, scale: this.options.scale });
+    this.view = new cls({ reader: this, service: this.service, scale: this.options.scale, seq: params.seq });
     var t2 = performance.now();
     this.emit('configure', this.view.config());
     this._updateViews(params.view);

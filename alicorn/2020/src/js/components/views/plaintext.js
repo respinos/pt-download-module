@@ -12,156 +12,140 @@ export var PlainText = class extends Single {
   }
 
   render(cb) {
-    // var minWidth = this.minWidth();
-    // var scale = this.scale;
 
     var fragment = document.createDocumentFragment();
+
+    var slice_index = 1;
     for(var seq = 1; seq <= this.service.manifest.totalSeq; seq++) {
 
       var page = document.createElement('div');
       page.setAttribute('tabindex', '-1');
 
-      // page.style.height = `${h}px`;
-      // page.style.width = `${w}px`;
-      page.dataset.bestFit = true; page.classList.add('page--best-fit');
-
       page.classList.add('page');
       page.dataset.seq = seq;
-      page.innerHTML = `<div class="page-text"></div><div class="info">${seq}</div>`;
+
+      var klass = seq % 2 == 0 ? 'verso' : 'recto';
+      if ( seq % 2 == 0 ) {
+        slice_index += 1;
+      }
+
+      page.classList.add(klass);
+
+      slice_index = this._slicify(seq);
+
+      page.dataset.slice = slice_index;
+      page.dataset.loaded = false;
+
+      page.innerHTML = `<div class="page--toolbar"><div class="tag"><span>#${seq}</span></div></div><div data-placeholder="☉" class="page-text">☉</div>`;
+      this._renderr(page);
+
       fragment.appendChild(page);
+      this.pages.push(page);
+      this.pagesIndex[seq] = page;
     }
 
     this.container.appendChild(fragment);
+
     var pages = this.container.querySelectorAll('.page');
+
     for(var i = 0; i < pages.length; i++) {
       this.bindPageEvents(pages[i]);
     }
 
-    this.is_active = true;
-    this.loadImage(this.container.querySelector('[data-seq="1"]'), {check_scroll: true});
+    if ( this._initialSeq ) {
+      this.display(this._initialSeq);
+    }
+
     if ( cb ) {
-      cb();
+      setTimeout(cb, 1000);
+      this._initialized = true;
     }
   }
 
   loadImage(page, options={}) {
     var self = this;
 
-    if ( ! this.is_active ) { return ; }
-    options = Object.assign({ check_scroll: false, preload: true }, options);
-    var seq = page.dataset.seq;
-    var rect = page.getBoundingClientRect();
-
-    var html_url = this.service.html({ seq: seq });
-
-    if ( page.querySelectorAll('.page-text > *').length ) {
-      return;
-    }
-
-    if ( page.dataset.loading == "true" ) {
-      return;
-    }
-
-    if ( ! this._highlightIndexMap ) {
-      this._highlightIndexMap = {};
-      this._highlightIndex = 0;
-    }
-
-    var html_request;
-    html_request = fetch(html_url, { credentials: 'include' });
-
-    page.dataset.loading = true; page.classList.add('page--loading');
-    html_request
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(text) {
-        var page_text = page.querySelector('.page-text');
-        page_text.innerHTML = text;
-
-        if ( page_text.textContent.trim() == "" ) {
-          page_text.innerHTML = `<div class="alert alert-block alert-info alert-headline"><p>NO TEXT ON PAGE</p></div><p>This page does not contain any text recoverable by the OCR engine.</p>`;
+    var _process = function(seq, loadImage) {
+      var page = self.pagesIndex[seq] ? self.pagesIndex[seq] : null;
+      if ( page && page.dataset.loaded == 'false' ) {
+        var html_url = self.service.html({ seq: seq });
+        if ( html_url ) {
+          self.service.loaders.images.queue({ src: html_url, page: page, mimetype: 'text/html' });
         }
-
-        page.dataset.loaded = true; page.classList.add('page--loaded');
-
-        page.style.height = 'auto';
-
-        // console.log("AHOY PAGES", seq, page_text.offsetHeight, page.offsetHeight, page_text.offsetHeight / page.offsetHeight);
-        // if ( page_text.offsetHeight / page.offsetHeight < 0.50 ) {
-        //   page_text.style.paddingTop = '3rem';
-        // }
-
-        // if ( page_text.offsetHeight < page_text.scrollHeight ) {
-        //   page.style.height = `${page_text.scrollHeight}px`;
-        // }
-
-        var page_div = page_text.children[0];
-        var words = page_div.dataset.words;
-        if ( words !== undefined ) {
-          words = JSON.parse(words);
-
-          function textNodesUnder(el){
-            var n, a=[], walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false);
-            while(n=walk.nextNode()) a.push(n);
-            return a;
-          }
-
-          var textNodes = textNodesUnder(page_div);
-          var spanClass = 'solr_highlight_1';
-          var highlight_idx = 0;
-
-          textNodes.forEach(function(text) {
-            var innerHTML = text.nodeValue.trim();
-            if ( ! innerHTML ) { return; }
-            words.forEach(function(word) {
-              var pattern = new RegExp(`\\b(${word})\\b`, 'gi');
-
-              var matchedWord = word.toLowerCase();
-              var highlight_idx = self._highlightIndexMap[matchedWord];
-              if ( ! highlight_idx ) {
-                self._highlightIndex += 1;
-                if ( self._highlightIndex > 6 ) { self._highlightIndex = 1; }
-                self._highlightIndexMap[matchedWord] = self._highlightIndex;
-                highlight_idx = self._highlightIndexMap[matchedWord];
-              }
-              spanClass = `solr_highlight_${highlight_idx}`;
-
-              var replaceWith = '<span' + ( spanClass ? ' class="' + spanClass + '"' : '' ) + '>$1</span>';
-              innerHTML = innerHTML.replace(pattern, replaceWith);
-            })
-            if ( innerHTML == text.nodeValue.trim() ) { return; }
-            text.parentNode.innerHTML = innerHTML;
-          })
-        }
-      });
-
-    if ( ! page.dataset.preloaded && options.preload ) {
-      this.preloadImages(page);
+      }
     }
+
+    var pages = Array.isArray(page) ? page : [ page ];
+    console.log("?? loadImage", pages);
+    var page = pages[0];
+
+    for(var i = 0; i < pages.length; i++) {
+      // first queue the immediate pages
+      for(var i = 0; i < pages.length; i++) {
+        var page = pages[i];
+        var seq = parseInt(page.dataset.seq, 10);
+        _process(seq, true);
+      }
+    }
+
+    // now queue surrounding pages
+    if ( options.lazy !== false ) {
+      var page = pages[0];
+      var seq = parseInt(page.dataset.seq, 10);
+
+      for(var ii = seq - 2; ii < seq; ii++) {
+        _process(ii, true);
+      }
+    }
+
+    if ( options.lazy !== false ) {
+      var page = pages[pages.length - 1];
+      var seq = parseInt(page.dataset.seq, 10);
+      for(var ii = seq + 2; ii > seq; ii--) {
+        _process(ii, true);
+      }
+    }
+    self.service.loaders.images.start();
+
+    console.log("// loading:", page.dataset.seq);
+  }
+
+  postText(text, datum) {
+    super.postText(text, datum);
+    var page_text = datum.page.querySelector('.page-text');
+    if ( page_text.textContent.trim() == "" ) {
+      page_text.innerHTML = `<div class="alert alert-block alert-info alert-headline"><p>NO TEXT ON PAGE</p></div><p>This page does not contain any text recoverable by the OCR engine.</p>`;
+    }
+
+    datum.page.dataset.loaded = true;
+  }
+
+  _drawHighlights(page) {
+    // NOP
   }
 
   unloadImage(page) {
-    if ( page.dataset.preloaded == "true" ) { return; }
-    if ( page.dataset.loading == "true" ) { return ; }
+
+    page.dataset.loaded = 'false';
+    page.dataset.isLeaving = false;
+
+
     var page_text = page.querySelector('.page-text');
-    page_text.innerHTML = '';
-    page.dataset.preloaded = false;
-    page.dataset.loaded = false; page.classList.remove('page--loaded');
+    page_text.innerHTML = page_text.dataset.placeholder;
   }
 
   bindEvents() {
 
     this._handlers.resize = this.reader.on('resize', () => {
-      var loaded = this.container.querySelectorAll('[data-loaded="true"]');
-      for(var i = 0; i < loaded.length; i++) {
-        var page = loaded[i];
-        var page_text = page.querySelector('.page-text');
-        if ( page_text.offsetHeight < page_text.scrollHeight ) {
-          // page.style.height = `${page_text.scrollHeight}px`;
-          page.style.height = 'auto';
-        }
-      }
+      // var loaded = this.container.querySelectorAll('[data-loaded="true"]');
+      // for(var i = 0; i < loaded.length; i++) {
+      //   var page = loaded[i];
+      //   var page_text = page.querySelector('.page-text');
+      //   if ( page_text.offsetHeight < page_text.scrollHeight ) {
+      //     // page.style.height = `${page_text.scrollHeight}px`;
+      //     page.style.height = 'auto';
+      //   }
+      // }
     })
 
     this.reader.on('relocated', (params) => {

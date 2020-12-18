@@ -84,7 +84,7 @@ $sidebar-buffer: 1.0rem;
   display: block;
 
   padding: 0;
-  z-index: 9000;
+  z-index: 24;
 
   opacity: 0.5;
 
@@ -230,7 +230,7 @@ body[data-zoomed-in="true"] {
   grid-template-rows: 1fr;
   overflow: hidden;
 
-  &[data-view="1up"], &[data-view="thumb"] {
+  &[data-view="1up"], &[data-view="thumb"], &[data-view="image"], &[data-view="plaintext"] {
     .app--reader--container {
       overflow: auto;
     }
@@ -279,20 +279,449 @@ body[data-zoomed-in="true"] {
       align-content: center;
     }
 
-    .app--reader--container {
+    .app--reader--viewer {
       display: grid;
-      grid-template-rows: max-content;
+      // grid-template-rows: max-content;
       min-height: 0;
       height: auto;
       width: 100%;
-      overflow: auto;
+
+      grid-template-areas: "page";
+      grid-template-rows: 1fr;
+      grid-template-columns: min-content;
+      justify-content: center;
+      align-content: center;
+
+      &.animating {
+        overflow: hidden;
+      }
+
+      &::after {
+        display: block;
+        content: "";
+        height: 6rem;
+      }
+
+      .page {
+
+        backface-visibility: hidden;
+        grid-area: page;
+
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s linear 300ms, opacity 300ms;
+
+        margin-bottom: 4rem;
+
+        // display: flex;
+
+        &[data-visible="true"] {
+          visibility: visible;
+          opacity: 1;
+          transition: visibility 0s linear 0s, opacity 300ms;
+        }
+
+        &[data-visible="false"] {
+          .image {
+            height: 0 !important;
+          }
+        }
+
+        .image {
+          img {
+            height: 100%;
+          }
+        }
+
+        &.page--foldout {
+          .image {
+            transform: scale(1.1);
+          }
+        }
+
+        &.page--moveToLeft {
+          animation: imageMoveToLeft .6s ease both;
+        }
+
+        &.page--moveFromRight {
+          animation: imageMoveFromRight .6s ease both;
+        }
+
+        // $fade-duration: .7s;
+        $fade-duration: .4s;
+        $fadeOut-duration: .7s;
+        &.page--moveFromRightFade {
+          animation: imageMoveFromRightFade $fade-duration ease both;
+        }
+
+        &.page--moveToRight {
+          animation: imageMoveToRight .6s ease both;
+        }
+
+        &.page--moveFromLeft {
+          animation: imageMoveFromLeft .6s ease both;
+        }
+
+        &.page--moveFromLeftFade {
+          animation: imageMoveFromLeftFade $fade-duration ease both;
+        }
+
+        &.page--fade {
+          animation: imageFade $fadeOut-duration ease both;
+        }
+
+      }
+
+    }
+  }
+
+  &[data-view="plaintext"] {
+    justify-content: center;
+
+    &.short {
+      align-content: center;
+    }
+
+    .app--reader--viewer {
+      display: grid;
+      // grid-template-rows: max-content;
+      min-height: 0;
+      height: auto;
+      width: 100%;
+
+      grid-template-areas: "page";
+      grid-template-rows: 1fr;
+      grid-template-columns: 85%;
+      justify-content: center;
+      align-content: center;
+
+      &.animating {
+        overflow: hidden;
+      }
+
+      &::after {
+        display: block;
+        content: "";
+        height: 6rem;
+      }
+
+      .page {
+
+        backface-visibility: hidden;
+        grid-area: page;
+
+        visibility: hidden;
+        opacity: 0;
+        // transition: visibility 0s linear 300ms, opacity 300ms;
+
+        width: 100%;
+
+        margin-bottom: 4rem;
+
+        // display: flex;
+
+        &[data-visible="true"] {
+          visibility: visible;
+          opacity: 1;
+          // transition: visibility 0s linear 0s, opacity 300ms;
+        }
+
+        &[data-visible="false"] {
+          .page-text {
+            height: 0 !important;
+            min-height: 0;
+          }
+        }
+
+        .page-text {
+          display: flex;
+          flex-direction: column;
+          
+          position: static !important;
+          height: auto;
+          width: auto;
+          overflow: auto;
+          clip: unset;
+          clip-path: none;
+
+          max-width: 80rem;
+          min-height: 50vh;
+          padding: 1rem;
+          padding-top: 2rem;
+
+          background: #fff;
+          box-shadow: 0px 10px 13px -7px #000000, 0px 6px 15px 5px rgba(0, 0, 0, 0);
+          border: 1px solid #ddd;
+
+          font-size: 1.25rem;
+          line-height: 1.25;
+
+          align-items: flex-start;
+          justify-content: start;
+
+          .ocr_page, .ocrx_block { font-size: inherit; }
+          .ocrx_block {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+          }
+
+          .ocr_page[data-force-breaks="true"] {
+            .ocr_line {
+              display: block;
+            }
+          }
+
+          [data-line-break] + [data-line-break] {
+            display: block;
+          }
+
+          [data-end-paragraph]::after {
+            content: "";
+            display: table;
+            margin-bottom: 1rem;
+          }
+
+          .alert-block {
+            width: 100%;
+          }
+
+        }
+
+        &[data-loaded="false"] {
+          .page-text {
+            align-items: center;
+            justify-content: center;
+
+            font-size: 6rem;
+            opacity: 0.4;
+            color: #666;
+          }
+        }
+
+        &.page--moveToLeft {
+          animation: imageMoveToLeft .6s ease both;
+        }
+
+        &.page--moveFromRight {
+          animation: imageMoveFromRight .6s ease both;
+        }
+
+        // $fade-duration: .7s;
+        $fade-duration: .4s;
+        $fadeOut-duration: .7s;
+        &.page--moveFromRightFade {
+          animation: imageMoveFromRightFade $fade-duration ease both;
+        }
+
+        &.page--moveToRight {
+          animation: imageMoveToRight .6s ease both;
+        }
+
+        &.page--moveFromLeft {
+          animation: imageMoveFromLeft .6s ease both;
+        }
+
+        &.page--moveFromLeftFade {
+          animation: imageMoveFromLeftFade $fade-duration ease both;
+        }
+
+        &.page--fade {
+          animation: imageFade $fadeOut-duration ease both;
+        }
+
+      }
+
     }
   }
 
   &[data-view="2up"] {
+
     grid-template-rows: 1fr;
     justify-content: center;
     align-content: center;
+
+    .app--reader--container {
+      min-width: 0;
+      overflow: auto;
+    }
+
+    .app--reader--viewer {
+      display: grid;
+      grid-template-areas: "verso recto";
+      grid-template-rows: 1fr;
+      grid-template-columns: min-content min-content;
+      grid-gap: 0rem;
+
+      padding-top: 3rem;
+      margin-bottom: 4rem;
+
+      min-width: 0;
+
+      .page {
+        backface-visibility: hidden;
+        visibility: hidden;
+        opacity: 0;
+
+        // transition: visibility 0s linear 300ms, opacity 300ms;
+
+        .page--toolbar {
+          position: static !important;
+        }
+
+        .image {
+          max-height: var(--max-page-height, none);
+
+          background: transparent;
+          border: none;
+
+          img {
+            width: auto;
+            height: 100%;
+            border: 1px solid #ddd;
+          }
+
+        }
+
+        &[data-reframed="true"] {
+          .image {
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAFCAYAAABirU3bAAAAG0lEQVQIW2O8c+fOTCEhIYZ3794xgGhGKggAAJf0H/UWcK5GAAAAAElFTkSuQmCC);
+          }
+
+          &.verso {
+            .image {
+              border-left: 4px solid #666;
+            }
+          }
+
+          &.recto {
+            .image {
+              border-right: 4px solid #666;
+            }
+          }
+        }
+
+        &[data-visible="true"] {
+          opacity: 1;
+          visibility: visible;
+          // transition: visibility 0s linear 0s, opacity 300ms;
+        }
+
+        &:last-of-type {
+          margin-bottom: auto;
+        }
+
+        $flip-animation-delay: .5s;
+        &.recto {
+          grid-area: recto;
+          transform-origin: 0% 0%;
+          margin-left: 0;
+
+          &.page--flipToLeft {
+            animation: flip-hide-recto $flip-animation-delay forwards ease;
+          }
+
+          &.page--flipToRight {
+            animation: flip-show-recto $flip-animation-delay forwards ease;
+          }
+
+          &.page--flippingToLeft {
+            z-index: 1;
+            visibility: visible;
+            opacity: 1;
+          }
+
+          .image {
+            justify-content: start;
+          }
+        }
+
+        &.verso {
+          grid-area: verso;
+          transform-origin: 100% 0%;
+          margin-right: 0;
+
+          &.page--flippingToRight {
+            z-index: 1;
+            visibility: visible;
+            opacity: 1;
+          }
+
+          &.page--flipToRight {
+            animation: flip-hide-verso $flip-animation-delay forwards ease;
+          }
+
+          &.page--flipToLeft {
+            animation: flip-show-verso $flip-animation-delay forwards ease;
+          }
+
+          .page--toolbar {
+            justify-content: flex-start;
+            .tag {
+              flex-direction: row-reverse;
+            }
+          }
+
+          .image {
+            justify-content: end;
+          }
+        }
+
+        & + .page {
+          margin-top: 0;
+        }
+
+        &:first-of-type {
+          margin-top: 0;
+        }
+
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+
+      // &[data-transition="next"][data-animating="true"] {
+      //   .page[data-visible="true"] {
+      //     &.verso {
+      //       animation: next-hide-left 0.5s forwards ease;
+      //     }
+      //     &.recto {
+      //       animation: next-hide-right 0.5s forwards ease-in;
+      //     }
+      //   }
+
+      //   .page[data-visible="pending"] {
+      //     &.verso {
+      //       animation: next-show-left 0.5s forwards ease-out;
+      //       animation-delay: 0.5s;
+      //     }
+      //     &.recto {
+      //       visibility: visible;
+      //     }
+      //   }
+      // }
+
+      // &[data-transition="previous"][data-animating="true"] {
+      //   .page[data-visible="true"] {
+      //     &.verso {
+      //       animation: previous-hide-left 0.5s forwards ease-in;
+      //     }
+      //     &.recto {
+      //       animation: previous-hide-right 0.5s forwards ease;
+      //     }
+      //   }
+
+      //   .page[data-visible="pending"] {
+      //     &.verso {
+      //       visibility: visible;
+      //     }
+      //     &.recto {
+      //       animation: previous-show-right 0.5s forwards ease-out;
+      //     }
+      //   }
+      // }
+
+    }
+
   }
 }
 
@@ -304,8 +733,9 @@ body[data-zoomed-in="true"] {
   position: absolute;
   display: flex;
   align-items: flex-start;
-  right: 1.5rem;
-  z-index: 25;
+  right: 0;
+  // right: 1.5rem;
+  z-index: 23;
 
   background: transparent;
   pointer-events: none;
@@ -497,7 +927,7 @@ body[data-zoomed-in="true"] {
 }
 
 .app---reader--toolbar {
-  z-index: 5000;
+  z-index: 23;
   position: absolute;
   bottom: 0.75rem;
   left: 50%;
@@ -604,13 +1034,19 @@ body[data-zoomed-in="true"] {
         background: transparent;
         border: transparent;
         margin-right: 0;
+        padding: 0 0.5rem;
 
         svg {
           height: 2rem;
           width: 2rem;
           stroke: white;
           fill: white;
-          display: none;
+        }
+
+        &[data-action="toggle"] {
+          svg {
+            display: none;
+          }
         }
 
         &[aria-pressed="true"] {
@@ -736,13 +1172,6 @@ body[data-zoomed-in="true"] {
         transform: rotate(-270deg) scale(80%);
         margin-top: calc(var(--margin-rotated) * 1px);
         margin-bottom: calc(var(--margin-rotated) * 1px);
-
-
-        // margin: calc(calc(calc( var(--height) - var(--width) ) ) * -0.5 ) + 8px );
-        // margin: calc(calc(calc( ( var(--height) * 0.8 ) - ( var(--width) * 0.8 ) ) * -0.5 ) + 8px );
-        // margin-left: auto;
-        // margin-right: auto;
-        // height: calc(var(--height) * 0.8);
       }
     }
   }
@@ -908,15 +1337,39 @@ body[data-zoomed-in="true"] {
 
 // VIEW TOOLBARS
 .app--reader[data-view="1up"] {
+
+  .app--reader--viewer {
+    .page {
+      &.page--foldout {
+        .image {
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+
   button[data-target="1up"] {
     background: rgba(0,0,0,0.8);
   }
 }
 
 .app--reader[data-view="2up"] {
+
+  .app--reader--viewer {
+    grid-template-rows: 1fr;
+    justify-content: center;
+    align-content: center;
+    padding-right: 2rem; // get away from the toolbar
+
+  }
+
+
   button[data-target="2up"] {
     background: rgba(0,0,0,0.8);
   }
+
+
+
 }
 
 .app--reader[data-view="image"] {
@@ -968,3 +1421,199 @@ body[data-zoomed-in="true"] {
   background: #0099cc;
 }
 
+// POPOUTS
+.modal.lightbox.is-open {
+  .modal__container {
+    .modal__content {
+      padding: 0;
+      max-height: 98vh;
+
+      img {
+        // height: auto;
+        // width: auto;
+        max-height: 100%;
+      }
+    }
+    .modal__header {
+      padding: .5rem 1rem;
+      .modal__title {
+        font_size: 1rem;
+      }
+    }
+    .modal__footer {
+      padding: .5rem 1rem;
+    }
+  }
+}
+
+// VIEW=2up ANIMATIONS
+@keyframes flip-show-recto {
+  from { visibility: visible; opacity: 1; z-index: 1; transform: rotateY(180deg) }
+  to { z-index: 1; transform: rotateY(0deg); }
+}
+
+@keyframes flip-hide-verso {
+  from {  }
+  to { transform: rotateY(180deg); }
+}
+
+@keyframes flip-hide-recto {
+  from { z-index: 2; }
+  to { transform: rotateY(-180deg); }
+}
+
+@keyframes flip-show-verso {
+  from { visibility: visible; opacity: 1; z-index: 1; transform: rotateY(-180deg) }
+  to { z-index: 1; transform: rotateY(0deg); }
+}
+
+// @keyframes next-show-right {
+//   100% {
+//     visibility: visible;
+//   }
+// }
+
+// @keyframes next-show-left {
+//   // 0% {
+//   //   transform: rotateY(90deg);
+//   //   visibility: visible;
+//   // }
+//   0% {
+//     transform: rotateY(45deg);
+//   }
+//   100% {
+//     transform: rotateY(0deg);
+//     visibility: visible;
+//   }
+// }
+
+// @keyframes next-hide-right {
+//   0% {
+//     transform: rotateY(0deg);
+//     z-index: 1000;
+//   }
+//   40% {
+//     transform: rotateY(-45deg);
+//   }
+//   100% {
+//     transform: rotateY(-90deg);
+//     visibility: hidden;
+//   }
+// }
+
+// @keyframes next-hide-left {
+//   100% {
+//     visibility: hidden;
+//   }
+// }
+
+// @keyframes previous-show-left {
+//   100% {
+//     visibility: visible;
+//   }
+// }
+
+// @keyframes previous-show-right {
+//   0% {
+//     transform: rotateY(180deg);
+//     visibility: visible;
+//     z-index: 1001;
+//   }
+//   40% {
+//     transform: rotateY(90deg);
+//     visibility: visible;
+//     z-index: 1001;
+//   }
+//   100% {
+//     transform: rotateY(0deg);
+//     visibility: visible;
+//     z-index: 1001;
+//   }
+// }
+
+// @keyframes previous-hide-left {
+//   0% {
+//     transform: rotateY(0deg);
+//     z-index: 1000;
+//   }
+//   40% {
+//     transform: rotateY(-90deg);
+//   }
+//   100% {
+//     transform: rotateY(-180deg);
+//     visibility: hidden;
+//   }
+// }
+
+// @keyframes previous-hide-right {
+//   100% {
+//     visibility: hidden;
+//   }
+// }
+
+// @keyframes next-hide-page {
+//   0% {
+//     transform: rotateY(0deg);
+//     z-index: 1000;
+//     visibility: visible;
+//   }
+//   20% {
+//     transform: rotateY(45deg);
+//   }
+//   40% {
+//     transform: rotateY(90deg);
+//   }
+//   100% {
+//     transform: rotateY(180deg);
+//     visibility: hidden;
+//   }
+// }
+
+// @keyframes previous-hide-page {
+//   0% {
+//     transform: rotateY(0deg);
+//     z-index: 1000;
+//     visibility: visible;
+//   }
+//   20% {
+//     transform: rotateY(-45deg);
+//   }
+//   40% {
+//     transform: rotateY(-90deg);
+//   }
+//   100% {
+//     transform: rotateY(-180deg);
+//     visibility: hidden;
+//   }
+// }
+
+@keyframes imageMoveToLeft {
+  from {}
+  to{ transform: translateX(-200%) }
+}
+
+@keyframes imageMoveFromRight {
+  from{ transform: translateX(200%) }
+}
+
+@keyframes imageMoveFromRightFade {
+  from { opacity: 0.3; transform: translateX(200%); }
+}
+
+@keyframes imageMoveToRight {
+  from {}
+  to{ transform: translateX(200%) }
+}
+
+@keyframes imageMoveFromLeft {
+  from{ transform: translateX(-200%) }
+}
+
+@keyframes imageMoveFromLeftFade {
+  from{ opacity: 0.3; transform: translateX(-200%) }
+}
+
+@keyframes imageFade {
+  from { }
+  to { opacity: 0; }
+}

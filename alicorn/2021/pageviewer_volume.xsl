@@ -184,7 +184,7 @@
   <xsl:template name="build-box-section">
     <xsl:variable name="totalSeq" select="count(//METS:structMap[@TYPE='physical']/METS:div[@TYPE]/METS:div[@ORDER])" />
 
-    <section class="box-reader-main" data-view="1up">
+    <section class="box-reader-main" data-view="2up">
       <div class="box-reader-wrap">
         <div class="box-reader">
           <xsl:attribute name="data-total-seq"><xsl:value-of select="$totalSeq" /></xsl:attribute>
@@ -201,8 +201,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js" integrity="sha512-vPeZ7JCboHcfpqSx5ZD+/jpEhS4JpXxfz9orSvAPPj0EKUVShU2tgy7XkU+oujBJKnWmu4hU7r9MMQNWPfXsYw==" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/picloader@0.0.4/index.js"></script>
     <script type="application/javascript" src="/alicorn/2021/js/demo.js"></script>
+    <script type="application/javascript" src="/alicorn/2021/js/reader.2up.js"></script>
     <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.image.js"></script> -->
-    <script type="application/javascript" src="/alicorn/2021/js/reader.js"></script>
+    <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.js"></script> -->
   </xsl:template>
 
   <xsl:template name="build-box-reader-toolbar-navigator">
