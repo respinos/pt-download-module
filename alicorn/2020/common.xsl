@@ -843,9 +843,16 @@
 
     <xsl:call-template name="sidebar-about-this-book" />
     <!-- <xsl:call-template name="build-extra-sidebar-panels" /> -->
-    <!-- <xsl:call-template name="search-this-book" /> -->
+
+    <!-- narrow -->
+    <xsl:call-template name="sidebar-table-of-contents" />
+    <xsl:call-template name="sidebar-search-this-book" />
+
     <xsl:call-template name="get-this-book" />
     <xsl:call-template name="download-this-book" />
+
+    <xsl:call-template name="configure-this-book" />
+
     <xsl:if test="$gHasOcr = 'YES'">
       <xsl:call-template name="access-overview-block" />
     </xsl:if>
@@ -1017,9 +1024,9 @@
     <xsl:text>Catalog record not available</xsl:text>
   </xsl:template>
 
-  <xsl:template name="search-this-book">
+  <xsl:template name="sidebar-search-this-book">
     <xsl:if test="$gHasOcr='YES'">
-      <div class="searchItem panel">
+      <div class="searchItem panel mq--narrower">
         <h3>
           <xsl:call-template name="build-pt-icon">
             <xsl:with-param name="id">bi-search</xsl:with-param>
@@ -1066,6 +1073,9 @@
       </div>
     </xsl:if>
   </xsl:template>
+
+  <xsl:template name="configure-this-book" />
+  <xsl:template name="sidebar-table-of-contents" />
   
   <xsl:template name="get-this-book">
 

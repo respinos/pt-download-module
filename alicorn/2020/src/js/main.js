@@ -731,6 +731,11 @@ document.addEventListener("visibilitychange", handleVisibilityChange, false);
 window.addEventListener("focus", handleWindowFocus, false);
 window.addEventListener("blur", handleWindowBlur, false);
 
+const mq = window.matchMedia("(min-width: 992px)");
+document.body.dataset.sidebarNarrowState = mq.matches ? 'open' : 'closed';
+document.querySelector("#action-toggle-sidebar-narrow").setAttribute('aria-expanded', document.body.dataset.sidebarNarrowState == 'open');
+// also should handle aria-epxnaded
+
 setTimeout(() => {
     var event = document.createEvent('UIEvents');
     event.initEvent('resize', true, false, window, 0);

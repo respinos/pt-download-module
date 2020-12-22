@@ -9,20 +9,22 @@ head.ready(function() {
     // }
 
     $header = $("header");
-    $navigator = $(".navigator");
+    $navigator = $(".app--reader--navigator");
     if ( $navigator.length ) {
-      document.documentElement.dataset.expanded = true;
-      $navigator.get(0).style.setProperty('--height', `-${$navigator.outerHeight() * 0.90}px`);
-      $navigator.get(0).dataset.originalHeight = `{$navigator.outerHeight()}px`;
-      document.documentElement.style.setProperty('--navigator-height', `${$navigator.outerHeight()}px`);
-      var $expando = $navigator.find(".action-expando");
+      document.body.dataset.expanded = true;
+      // $navigator.get(0).style.setProperty('--height', `-${$navigator.outerHeight() * 0.90}px`);
+      // $navigator.get(0).dataset.originalHeight = `{$navigator.outerHeight()}px`;
+      // document.documentElement.style.setProperty('--navigator-height', `${$navigator.outerHeight()}px`);
+      // var $expando = $navigator.find(".action-expando");
+      var $expando = $("#action-expando");
       $expando.on('click', function() {
-        document.documentElement.dataset.expanded = ! ( document.documentElement.dataset.expanded == 'true' );
-        var navigatorHeight = 0;
-        if ( document.documentElement.dataset.expanded == 'true' ) {
-          navigatorHeight = $navigator.get(0).dataset.originalHeight;
-        }
-        document.documentElement.style.setProperty('--navigator-height', navigatorHeight);
+        document.body.dataset.expanded = ! ( document.body.dataset.expanded == 'true' );
+        this.setAttribute('aria-expanded', ( document.body.dataset.expanded == 'true' ));
+        // var navigatorHeight = 0;
+        // if ( document.documentElement.dataset.expanded == 'true' ) {
+        //   navigatorHeight = $navigator.get(0).dataset.originalHeight;
+        // }
+        // document.documentElement.style.setProperty('--navigator-height', navigatorHeight);
       })
 
       if ( HT.params.ui == 'embed' ) {
@@ -59,22 +61,6 @@ head.ready(function() {
       }
     })
 
-    // var vh = window.innerHeight * 0.01;
-    // document.documentElement.style.setProperty('--vh', vh + 'px');
-
-    // $(window).on("resize", function() {
-    //     var vh = window.innerHeight * 0.01;
-    //     document.documentElement.style.setProperty('--vh', vh + 'px');
-    // })
-
-    // $(window).on("orientationchange", function() {
-    //     setTimeout(function() {
-    //         var vh = window.innerHeight * 0.01;
-    //         document.documentElement.style.setProperty('--vh', vh + 'px');
-
-    //         HT.utils.handleOrientationChange();
-    //     }, 100);
-    // })
     if ( HT && HT.utils && HT.utils.handleOrientationChange ) {
       HT.utils.handleOrientationChange();
     }

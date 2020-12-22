@@ -25,6 +25,13 @@ export var Flexinator = class {
         event.stopPropagation();
         self.sidebar();
       })
+      
+      document.querySelector('#action-toggle-sidebar-narrow').addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        document.body.dataset.sidebarNarrowState = document.body.dataset.sidebarNarrowState == 'closed' ? 'open' : 'closed';
+        this.setAttribute('aria-expanded', document.body.dataset.sidebarNarrowState == 'open');
+      })
     }
 
   }
@@ -37,18 +44,22 @@ export var Flexinator = class {
     if ( expand ) {
       // sidebar is closed, so expand it!
       this.$sidebarToggle.setAttribute('aria-expanded', 'true');
-      this.$sidebar.removeAttribute('hidden');
-      $("header").show();
-      $("footer").show();
+
+      // this.$sidebar.removeAttribute('hidden');
+      // $("header").show();
+      // $("footer").show();
+
       document.body.dataset.sidebarState = 'open';
       this.emitter.emit("track", "sidebar-expanded:true");
       this.reader.emit('resize');
     } else {
       // sidebar is expanded, so close it!
       this.$sidebarToggle.setAttribute('aria-expanded', 'false');
-      this.$sidebar.setAttribute('hidden', 'hidden');
-      $("header").hide();
-      $("footer").hide();
+
+      // this.$sidebar.setAttribute('hidden', 'hidden');
+      // $("header").hide();
+      // $("footer").hide();
+
       this.emitter.emit("track", "sidebar-expanded:false");
       this.reader.emit('resize');
       document.body.dataset.sidebarState = 'closed';

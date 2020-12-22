@@ -97,6 +97,13 @@ export var Flip = class extends Base {
     return nodes;
   }
 
+  render(cb) {
+    if ( this.isRTL ) {
+      this.container.classList.add('reading-order--rtl');
+    }
+    super.render(cb);
+  }
+
   display(seq) {
     var self = this;
 
@@ -139,7 +146,6 @@ export var Flip = class extends Base {
       targetPages.forEach((page) => { page.classList.remove(inClass, otherClass); })
       self.container.classList.remove('animating');
       self.isAnimating = false;
-      // self.currentSeq = parseInt(target.dataset.seq);
 
       self.reader.emit('relocated', { seq: self.currentSeq });
     }
@@ -168,15 +174,10 @@ export var Flip = class extends Base {
     if ( delta > 0 ) {
       currentPages[1].classList.add(outClass);
       targetPages[0].classList.add(inClass);
-      // targetPages[1].classList.add(otherClass);
     } else {
       currentPages[0].classList.add(outClass);
       targetPages[1].classList.add(inClass);
-      // targetPages[0].classList.add(otherClass);
     }
-
-    // currentPages.forEach((page) => { page.classList.add(outClass); });
-    // targetPages.forEach((page) => { page.classList.add(inClass); });
 
     this.visible(targetPages);
   }
@@ -266,7 +267,7 @@ export var Flip = class extends Base {
     if ( this.isRTL ) { direction = -direction; }
     var delta;
     if ( direction > 0 ) {
-      delta = this.currentSeq == 1 ? 1 : 2;
+      delta = ( this._hasFrontCover && this.currentSeq ) == 1 ? 1 : 2;
     } else {
       delta = -2;
     }
@@ -298,7 +299,7 @@ export var Flip = class extends Base {
   }
 
   maxHeight() {
-    return this.container.parentNode.offsetHeight * 0.75;
+    return this.container.parentNode.offsetHeight * 0.81;
   }
 
   minWidthNew2() {

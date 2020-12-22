@@ -32,6 +32,7 @@ export var Single = class extends Base {
     this.currentSeq = seq;
 
     if ( ! current ) {
+      self.reader.emit('relocated', { seq: seq });
       return;
     }
 

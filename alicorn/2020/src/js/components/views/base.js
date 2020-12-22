@@ -135,6 +135,23 @@ console.log("-- render", minWidth);
     }
 
     var slice_index = 1;
+
+    this._hasFrontCover = ( this.service.manifest.checkFeatures(1, "FRONT_COVER") || ( this.service.manifest.checkFeatures(1, "COVER") && this.service.manifest.checkFeatures(1, "RIGHT") ) || this.service.manifest.checkFeatures(1, "COVER") || ! this.service.manifest.checkFeatures(1) );
+    this._hasBackCover =  ( this.service.manifest.checkFeatures(endSeq, "BACK_COVER") || ( this.service.manifest.checkFeatures(endSeq, "COVER") && this.service.manifest.checkFeatures(endSeq, "LEFT") ) );
+
+    // // --- DEBUGGING
+    // this._hasFrontCover = this._hasBackCover = false;
+
+    if ( this._hasFrontCover ) {
+        // first page is a cover, so add a dummy page
+        var page = document.createElement('div');
+        page.setAttribute('tabindex', '-1');
+        page.classList.add('page', 'placeholder', 'verso');
+        page.dataset.slice = slice_index;
+        page.dataset.placeholder = true;
+        fragment.appendChild(page);
+    }
+
     for(var seq = 1; seq <= this.service.manifest.totalSeq; seq++) {
 
       var page = document.createElement('div');
@@ -159,11 +176,7 @@ console.log("-- render", minWidth);
       page.dataset.seq = seq;
 
       // var klass = ( seq - 1 ) % 2 == 0 ? 'verso' : 'recto';
-      var klass = seq % 2 == 0 ? 'verso' : 'recto';
-      if ( seq % 2 == 0 ) {
-        slice_index += 1;
-      }
-
+      var klass = this._assignSide(seq);
       page.classList.add(klass);
 
       slice_index = this._slicify(seq);
@@ -195,6 +208,17 @@ console.log("-- render", minWidth);
       this.pagesIndex[seq] = page;
     }
 
+    var endSeq = this.service.manifest.totalSeq;
+    if ( this._hasBackCover ) {
+      // there's a back cover
+      var page = document.createElement('div');
+      page.setAttribute('tabindex', '-1');
+      page.classList.add('page', 'placeholder', 'recto');
+      page.dataset.slice = slice_index;
+      page.dataset.placeholder = true;
+      fragment.appendChild(page);
+    }
+
     this.container.appendChild(fragment);
 
     var pages = this.container.querySelectorAll('.page');
@@ -223,10 +247,19 @@ console.log("-- render", minWidth);
   }
 
   _slicify(seq) {
-    var n = ( seq % 2 == 0 ) ? seq : seq - 1;
-    return ( Math.ceil(n / 2) || 0 ) + 1;
+    var n; var delta;
+    if ( this._hasFrontCover ) { n = ( seq % 2 == 0 ) ? seq : seq - 1; delta = 1; }
+    else { n = ( seq % 2 == 1 ) ? seq : seq - 1; delta = 0; }
+    return ( Math.ceil(n / 2) || 0 ) + delta;
   }
-  
+
+  _assignSide(seq) {
+    var klass;
+    if ( this._hasFrontCover ) { klass = seq % 2 == 0 ? 'verso' : 'recto'; }
+    else { klass = seq % 2 == 0 ? 'recto' : 'verso' };
+    return klass;
+  }
+
   resizePage(page) {
     var canvas = page.querySelector('img');
     if ( ! canvas ) { return ; }

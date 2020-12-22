@@ -165,10 +165,7 @@
     <h2 class="offscreen">
       <xsl:call-template name="get-view-title" />
     </h2>
-    <div class="app---reader--toolbar--controls">
-      <xsl:call-template name="build-reader-toolbar-paginator" />
-      <xsl:call-template name="build-reader-toolbar-options" />
-    </div>
+    <!-- <xsl:call-template name="build-reader-toolbar-controls" /> -->
     <div class="app--reader--container">
       <section class="app--reader--viewer">
         <xsl:attribute name="data-has-ocr">
@@ -194,6 +191,9 @@
       </section>
     </div>
     <div class="app---reader--toolbar">
+      <button id="action-expando" class="btn for-mobile" aria-label="Toggle Controls" aria-expanded="true">
+        <i class="icomoon" aria-hidden="true"></i>
+      </button>
       <xsl:call-template name="build-reader-toolbar-navigator">
         <xsl:with-param name="currentSeq" select="$currentSeq" />
         <xsl:with-param name="totalSeq" select="$totalSeq" />
@@ -218,7 +218,11 @@
 
     <form class="app--reader--navigator">
       <div class="navigator-range-wrap">
-        <input class="navigator-range" type="range" min="1" max="{$totalSeq}" value="{$currentSeq}" />
+        <input class="navigator-range" type="range" min="1" max="{$totalSeq}" value="{$currentSeq}">
+          <xsl:if test="$readingOrder = 'right-to-left'">
+            <xsl:attribute name="dir">rtl</xsl:attribute>
+          </xsl:if>
+        </input>
       </div>
       <div class="navigator-output">
         <!-- <span data-slot="seq">15</span> -->
@@ -240,37 +244,11 @@
     </form>
   </xsl:template>
 
-  <xsl:template name="build-reader-toolbar-navigator-xx">
-    <xsl:param name="currentSeq" />
-    <xsl:param name="totalSeq" />
-    <xsl:param name="readingOrder" />
-    <div class="app--reader--navigator">
-      <button class="action-expando for-mobile" aria-label="Toggle Menu"><i class="icomoon" aria-hidden="true"></i></button>
-      <form>
-        <label class="offscreen" for="control-navigator">Location: </label>
-        <div class="control-navigator--wrap">
-          <input id="control-navigator" type="range" name="locations-range-value" min="1" max="{$totalSeq}" aria-valuemin="1" aria-valuemax="{$totalSeq}" aria-valuenow="{$currentSeq}" aria-valuetext="{$currentSeq}/{$totalSeq}" value="1" data-background-position="0">
-            <xsl:if test="$readingOrder = 'right-to-left'">
-              <xsl:attribute name="dir">rtl</xsl:attribute>
-            </xsl:if>
-          </input>
-        </div>
-        <xsl:text> </xsl:text>
-        <xsl:if test="false()">
-          <div class="output">Page Scan <span data-slot="current-seq"><xsl:value-of select="$currentSeq" /></span> of <span data-slot="total-seq"><xsl:value-of select="$totalSeq" /></span><span data-slot="current-page-number"></span></div>
-        </xsl:if>
-        <div class="output"><span class="offscreen">Page Scan </span><span data-slot="current-seq">1</span> / <span data-slot="total-seq"><xsl:value-of select="$totalSeq" /></span></div>
-        <xsl:text> </xsl:text>
-        <button class="btn" id="action-prompt-seq" aria-label="Jump to location">Jump...</button>
 
-        <button tabindex="-1" id="action-focus-current-page" aria-hidden="true" style="display: none" accesskey="9">Show Current Page</button>
-        <button tabindex="-1" id="action-proxy-navigation-f" class="action-proxy-navigation" aria-hidden="true" style="display: none" accesskey="f" data-target="action-go-first">Go First</button>
-        <button tabindex="-1" id="action-proxy-navigation-p" class="action-proxy-navigation" aria-hidden="true" style="display: none" accesskey="p" data-target="action-go-prev">Go Previous</button>
-        <button tabindex="-1" id="action-proxy-navigation-x" class="action-proxy-navigation" aria-hidden="true" style="display: none" accesskey="x" data-target="action-go-next">Go Next</button>
-        <button tabindex="-1" id="action-proxy-navigation-n" class="action-proxy-navigation" aria-hidden="true" style="display: none" accesskey="n" data-target="action-go-next">Go Next</button>
-        <button tabindex="-1" id="action-proxy-navigation-l" class="action-proxy-navigation" aria-hidden="true" style="display: none" accesskey="l" data-target="action-go-last">Go Last</button>
-
-      </form>
+  <xsl:template name="build-reader-toolbar-controls">
+    <div class="app---reader--toolbar--controls">
+      <xsl:call-template name="build-reader-toolbar-paginator" />
+      <xsl:call-template name="build-reader-toolbar-options" />
     </div>
   </xsl:template>
 
@@ -368,7 +346,7 @@
   </xsl:template>
 
   <xsl:template name="build-main-container-extra">
-    <!-- <button data-target="enter-fullscreen" id="action-mobile-toggle-fullscreen" type="button" class="btn square alone for-mobile" data-toggle="tracking" data-tracking-action="PT Full Screen" aria-label="View Full Screen"><i class="icomoon"></i></button> -->
+    <xsl:call-template name="build-reader-toolbar-controls" />
   </xsl:template>
 
   <xsl:template name="load-extra-main-script" />
@@ -484,14 +462,79 @@
             <xsl:with-param name="show-label">TRUE</xsl:with-param>
           </xsl:call-template>
         </li>
+      </ul>
+    </div>
+  </xsl:template>
 
+  <xsl:template name="configure-this-book">
+    <div class="panel mq--narrower configure">
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-sliders</xsl:with-param>
+        </xsl:call-template>
+        <span>Configure</span>
+      </h3>
+      <ul>
+        <li class="toggle--500"><button class="btn action-zoom-in"><span><i class="icomoon icomoon-zoom-in"></i> Zoom In</span></button></li>
+        <li class="toggle--500"><button class="btn action-zoom-out"><span><i class="icomoon icomoon-zoom-out"></i> Zoom Out</span></button></li>
+        <li class="toggle--500"><button class="btn action-zoom-reset"><span><i class="icomoon icomoon-document"></i> Fit to Page</span></button></li>
 
-<!--         <li style="margin-top: 1rem"><button class="btn action-view" data-target="plaintext"><span><i class="icomoon icomoon-article"></i> View Plain Text</span></button></li>
-        <li><button class="btn action-view" data-target="1up"><span><i class="icomoon icomoon-scroll"></i> Scroll Page Scans</span></button></li>
-        <li><button class="btn action-view" data-target="2up"><span><i class="icomoon icomoon-book-alt2"></i> Flip Page Scans</span></button></li>
-        <li><button class="btn action-view" data-target="2up"><span><i class="icomoon icomoon-gridview"></i> View Thumbnails</span></button></li>
-        <li><button class="btn action-view" data-target="2up"><span><i class="icomoon icomoon-documents"></i> View Page by Page</span></button></li>
- -->      </ul>
+        <li class="toggle--500" style="margin-top: 1rem">
+          <xsl:call-template name="action-view-button">
+            <xsl:with-param name="view">plaintext</xsl:with-param>
+            <xsl:with-param name="show-label">TRUE</xsl:with-param>
+          </xsl:call-template>
+        </li>
+        <li class="toggle--500">
+          <xsl:call-template name="action-view-button">
+            <xsl:with-param name="view">1up</xsl:with-param>
+            <xsl:with-param name="show-label">TRUE</xsl:with-param>
+          </xsl:call-template>
+        </li>
+        <li class="toggle--500">
+          <xsl:call-template name="action-view-button">
+            <xsl:with-param name="view">2up</xsl:with-param>
+            <xsl:with-param name="show-label">TRUE</xsl:with-param>
+          </xsl:call-template>
+        </li>
+        <li class="toggle--500">
+          <xsl:call-template name="action-view-button">
+            <xsl:with-param name="view">thumb</xsl:with-param>
+            <xsl:with-param name="show-label">TRUE</xsl:with-param>
+          </xsl:call-template>
+        </li>
+        <li class="toggle--500">
+          <xsl:call-template name="action-view-button">
+            <xsl:with-param name="view">image</xsl:with-param>
+            <xsl:with-param name="show-label">TRUE</xsl:with-param>
+          </xsl:call-template>
+        </li>
+      </ul>
+    </div>
+  </xsl:template>
+
+  <xsl:template name="sidebar-table-of-contents">
+    <div class="panel mq--narrower" rel="note">
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-list</xsl:with-param>
+        </xsl:call-template>
+        <span>Table of Contents</span>
+      </h3>
+
+      <ul class="scrollable-list action-contents-navigation">
+        <xsl:for-each select="$gFeatureList/Feature">
+          <li>
+            <a href="{Link}" data-seq="{Seq}">
+              <xsl:value-of select="Label" />
+              <xsl:if test="normalize-space(Page)">
+                <xsl:text> - </xsl:text>
+                <xsl:value-of select="Page" />
+              </xsl:if>
+            </a>
+          </li>
+        </xsl:for-each>
+      </ul>
     </div>
   </xsl:template>
 
