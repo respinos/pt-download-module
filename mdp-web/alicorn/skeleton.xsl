@@ -112,6 +112,7 @@
         <xsl:attribute name="class">
           <xsl:call-template name="setup-body-class" />
         </xsl:attribute>
+        <xsl:call-template name="setup-body-data-attributes" />
 
         <xsl:call-template name="insert-svg-icons" />
 
@@ -139,6 +140,7 @@
   </xsl:template>
 
   <xsl:template name="setup-body-tail"></xsl:template>
+  <xsl:template name="setup-body-data-attributes"></xsl:template>
 
   <xsl:template name="skip-to-main-link" />
 

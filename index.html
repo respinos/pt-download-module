@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>2021.1 - Modern PageTurner</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" />
+
+    <link rel="icon"
+      href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em'>&lt;text y='.9em'>🎃&lt;/text>&lt;/svg>" />
+
+
+    <style>
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+      }
+
+
+      #output {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+  </head>
+  <body data-mode="output">
+    <div id="editor"></div>
+    <iframe id="output"></iframe>
+
+    <script>
+      var inputFilename = '/' + location.search.substr(1);
+      document.title += ' : ' + location.search.substr(1);
+    </script>
+    <script>
+      var processor = new XSLTProcessor();
+      var serializer = new XMLSerializer();
+
+      var output = document.querySelector('#output');
+      var editor = document.querySelector('#editor');
+
+      function loadXMLDoc(filename) {
+        var xhttp = new XMLHttpRequest();
+        console.log("AHOY", filename);
+        xhttp.open("GET", filename, false);
+        xhttp.send("");
+        return xhttp.responseXML;
+      }
+
+      var inputDocument;
+      var xsltDocument;
+      var resultDocument;
+      var preprocessDocument;
+
+      // preprocessDocument = loadXMLDoc("./tools/preprocess_import.xsl");
+
+      var baseName = inputFilename.split('/').pop();
+      inputDocument = loadXMLDoc(inputFilename);
+
+      var now = Date.now();
+//       var transformDocXML = `<?xml version="1.0" encoding="UTF-8" ?>
+// <xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:dlxs="http://dlxs.org" xmlns:qbat="http://dlxs.org/quombat" xmlns:qq="http://dlxs.org/quombat/ui" xmlns:exsl="http://exslt.org/common" extension-element-prefixes="exsl">
+//   <xsl:import href="/xsl/social.wireframe.xsl?now=${now}" />
+//   <xsl:import href="/xsl/${baseName.replace('.xml', '.wireframe.xsl')}?_=${now}" />
+//   <xsl:import href="${inputFilename.replace('.xml', '.wireframe.xsl')}?_=${now}" />
+//   <xsl:import href="/xsl/wireframe.xsl?_=${now}" />
+// </xsl:stylesheet>`;
+
+      // console.log(transformDocXML);
+
+      var parser = new DOMParser();
+      // var transformDoc = parser.parseFromString(transformDocXML, "text/xml");
+
+      var transformDoc = loadXMLDoc('./pt.2021.xsl');
+
+      var _resolve_imports = function(xmldoc) {
+        var imports = Array.prototype.slice.call(xmldoc.querySelectorAll('import'));
+        while ( imports.length ) {
+          var importNode = imports.shift();
+          var parentNode = importNode.parentNode;
+          var importDocument = loadXMLDoc(importNode.getAttribute('href'));
+          var children = importDocument.documentElement.children;
+          for(var i = 0; i < children.length; i++) {
+            var possibleNode = children[i];
+            var expandedNode = xmldoc.importNode(possibleNode, true);
+
+            if ( possibleNode.nodeName == 'xsl:template' && possibleNode.hasAttribute('name') ) {
+              // can only be one of these
+              var checkNode = xmldoc.querySelector(`template[name="${possibleNode.getAttribute('name')}"]`);
+              if ( checkNode ) {
+                console.log("REMOVING", checkNode);
+                var checkNodeParent = checkNode.parentNode;
+                checkNodeParent.removeChild(checkNode);
+                // checkNodeParent.replaceChild(expandedNode, checkNode);
+              }
+            }
+
+            var insertedNode = parentNode.insertBefore(expandedNode, importNode);
+            if ( insertedNode.name == 'xsl:import' ) {
+              imports.append(insertedNode);
+            }
+
+          }
+          parentNode.removeChild(importNode);
+        }
+      }
+
+      _resolve_imports(transformDoc);
+      console.log(transformDoc);
+
+      xsltDocument = transformDoc;
+      processor.reset();
+
+
+      try {
+        processor.importStylesheet(xsltDocument);
+      } catch(err) {
+        console.log(err);
+        editor.innerText = serializer.serializeToString(xsltDocument);
+        editor.style.display = 'block';
+        output.style.display = 'none';
+      }
+
+console.log("-- transform", inputDocument);
+      // resultDocument = processor.transformToFragment(inputDocument, document);
+      try {
+        resultDocument = processor.transformToDocument(inputDocument);
+      } catch(err) {
+        console.log(err);
+
+        editor.innerText = serializer.serializeToString(xsltDocument);
+        editor.style.display = 'block';
+        output.style.display = 'none';
+
+      }
+
+      // var formatter = require('xml-formatter');
+
+      var xmldata = serializer.serializeToString(resultDocument);
+      console.log(xmldata);
+
+      output.setAttribute('srcdoc', xmldata);
+
+    </script>
+  </body>
+</html>

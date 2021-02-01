@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+   Copyright 2006, The Regents of The University of Michigan, All Rights Reserved
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject
+   to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<MBooksTop>
+
+  <!-- pageviewer.xml -->
+
+  <!-- XSL fallback files -->
+  <XslFileList>
+    <Filename>xsl2htmlutils.xsl</Filename>
+    <Filename>coins.xsl</Filename>
+    <Filename>skeleton.xsl</Filename>
+    <Filename>common.xsl</Filename>
+    <Filename>js_utils.xsl</Filename>
+    <Filename>loads.xsl</Filename>
+    <Filename>loads_helper_pt.xsl</Filename>
+    <Filename>coll.xsl</Filename>
+    <Filename>skin.xsl</Filename>
+    <Filename>pageviewer.xsl</Filename>
+    <Filename>pageviewer_volume_epub.xsl</Filename>
+  </XslFileList>
+
+  <!-- Custom OPTIONAL XML for top-level file -->
+  <CustomXml><?CHUNK filename="pageviewer_extra.xml" optional="1"?></CustomXml>
+
+  <MBooksGlobals>
+    <?CHUNK filename="ptglobals.xml"?>
+    <OrphanCandidate><?ORPHAN_CANDIDATE?></OrphanCandidate>
+    <UrlRoots><?URL_ROOTS?></UrlRoots>
+    <PageLink><?PAGE_LINK?></PageLink>
+    <InCopyright><?IN_COPYRIGHT?></InCopyright>
+    <ItemType><?ITEM_TYPE?></ItemType>
+  </MBooksGlobals>
+
+  <?CHUNK filename="header.xml"?>
+
+  <MdpApp>
+    <CurrentPageFeatures><?CURRENT_PAGE_FEATURES?></CurrentPageFeatures>
+    <FeatureList><?FEATURE_LIST?></FeatureList>
+    <BackNavInfo><?BACK_NAV_LINK_INFO?></BackNavInfo>
+    <DefaultCollid><?DEFAULT_COLLID?></DefaultCollid>
+    <CollectionList><?COLLECTION_LIST?></CollectionList>
+    <LoginLink><?LOGIN_LINK?></LoginLink>
+    <AllowFullPDF><?ALLOW_FULL_PDF?></AllowFullPDF>
+    <FullPDFAccessMessage><?FULL_PDF_ACCESS_MESSAGE?></FullPDFAccessMessage>
+    <Section108><?SECTION_108?></Section108>
+
+    <EpubRoot><?EPUB_ROOT?></EpubRoot>
+
+    <AddToCollectionForm>
+      <CollectionSelect><?COLLECTION_SELECT?></CollectionSelect>
+    </AddToCollectionForm>
+
+    <QValsHash><?QVAL_ENCODED?></QValsHash>
+
+    <ViewTypeLinks>
+      <!-- <ViewTypeFullPdfLink><?VIEW_TYPE_FULL_PDF_LINK?></ViewTypeFullPdfLink> -->
+      <ViewTypeFullEpubLink><?VIEW_TYPE_FULL_EPUB_LINK?></ViewTypeFullEpubLink>
+      <!-- <ViewTypePdfLink><?VIEW_TYPE_PDF_LINK?></ViewTypePdfLink> -->
+      <!-- <ViewTypePlainTextLink><?VIEW_TYPE_PLAINTEXT_LINK?></ViewTypePlainTextLink> -->
+    </ViewTypeLinks>
+
+    <SearchForm>
+      <HiddenVars>
+        <?HIDDEN_ID?>
+        <?HIDDEN_ATTR?>
+        <?HIDDEN_DATAROOT?>
+      </HiddenVars>
+      <SearchResultsLink><?SEARCH_RESULTS_LINK?></SearchResultsLink>
+      <SearchResultsLabel><?SEARCH_RESULTS_LABEL?></SearchResultsLabel>
+      <InItemResultsLink><?IN_ITEM_SEARCH_RESULTS_LINK?></InItemResultsLink>
+      <?HEADER_SEARCH_FIELDS?>
+    </SearchForm>
+
+    <FeedbackForm>
+      <?FEEDBACK_CGI_URL?>
+    </FeedbackForm>
+
+    <ApplicationParams><?SETUP_APPLICATION_PARAMS?></ApplicationParams>
+
+    <DownloadProgressBase><?DOWNLOAD_PROGRESS_BASE?></DownloadProgressBase>
+
+  </MdpApp>
+
+  <?METS_XML?>
+
+</MBooksTop>

@@ -194,8 +194,9 @@
         </div>
       </div>
       <div class="box-reader-toolbar">
-        <xsl:call-template name="build-box-reader-toolbar-navigator" />
-        <xsl:call-template name="build-box-reader-toolbar-paginator" />
+        <xsl:call-template name="build-box-reader-uber-toolbar" />
+        <!-- <xsl:call-template name="build-box-reader-toolbar-navigator" />
+        <xsl:call-template name="build-box-reader-toolbar-paginator" /> -->
       </div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.6.1/randomColor.min.js" integrity="sha512-vPeZ7JCboHcfpqSx5ZD+/jpEhS4JpXxfz9orSvAPPj0EKUVShU2tgy7XkU+oujBJKnWmu4hU7r9MMQNWPfXsYw==" crossorigin="anonymous"></script>
@@ -204,6 +205,68 @@
     <script type="application/javascript" src="/alicorn/2021/js/reader.2up.js"></script>
     <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.image.js"></script> -->
     <!-- <script type="application/javascript" src="/alicorn/2021/js/reader.js"></script> -->
+  </xsl:template>
+
+  <xsl:template name="build-box-reader-uber-toolbar">
+    <xsl:variable name="currentSeq" select="//Param[@name='seq']" />
+    <xsl:variable name="totalSeq" select="count(//METS:structMap[@TYPE='physical']/METS:div[@TYPE]/METS:div[@ORDER])" />
+
+    <style>
+      .box-reader-uber-toolbar {
+        flex-grow: 1;
+        display: grid;
+        grid-template-rows: min-content;
+        grid-auto-columns: auto;
+        grid-auto-flow: column;
+        align-items: center;
+        justify-content: center;
+        grid-gap: 1rem;
+      }
+    </style>
+    <div class="box-reader-uber-toolbar">
+      <button class="btn" aria-label="Previous">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-zoom-in</xsl:with-param>
+        </xsl:call-template>
+        <span>ZOOM</span>
+      </button>
+      <button class="btn" aria-label="Previous">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-arrow-left-circle-fill</xsl:with-param>
+        </xsl:call-template>
+      </button>
+      <div class="navigator-output" style="display: flex; flex-direction: row; align-items: center;">
+        <!-- <span data-slot="seq">15</span> -->
+        <span>#</span>
+        <input type="text" name="navigator-input-seq" value="{$currentSeq}">
+          <xsl:attribute name="size">
+            <xsl:value-of select="string-length($totalSeq)" />
+          </xsl:attribute>
+        </input>
+        <span> / </span>
+        <span data-slot="total-seq"><xsl:value-of select="$totalSeq" /></span>
+      </div>
+      <button class="btn" aria-label="Next">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-arrow-right-circle-fill</xsl:with-param>
+        </xsl:call-template>
+      </button>
+      <button class="btn" aria-label="Next">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-files</xsl:with-param>
+        </xsl:call-template>
+      </button>
+      <button class="btn" aria-label="Next">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-book</xsl:with-param>
+        </xsl:call-template>
+      </button>
+      <button class="btn" aria-label="Next">
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-grid</xsl:with-param>
+        </xsl:call-template>
+      </button>
+    </div>
   </xsl:template>
 
   <xsl:template name="build-box-reader-toolbar-navigator">

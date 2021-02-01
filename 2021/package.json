@@ -1,0 +1,39 @@
+{
+  "name": "2021",
+  "version": "1.0.0",
+  "description": "Modern PageTurner (2021.1)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx gulp app && npx gulp sass"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.0.0-beta.26",
+    "core-js": "^3.8.3",
+    "intersection-observer": "^0.12.0",
+    "lodash": "^4.17.20",
+    "nanoevents": "^5.1.10",
+    "whatwg-fetch": "^3.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
+    "copy-webpack-plugin": "^7.0.0",
+    "css-loader": "^5.0.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.19.0",
+    "webpack-stream": "^6.1.2"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}
