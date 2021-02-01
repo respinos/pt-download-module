@@ -1,0 +1,19 @@
+{
+  "name": "pt-download-module",
+  "version": "1.0.0",
+  "description": "Prototyping PageTurner",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd 2021 && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/respinos/pt-download-module.git"
+  },
+  "author": "",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/respinos/pt-download-module/issues"
+  },
+  "homepage": "https://github.com/respinos/pt-download-module#readme"
+}
