@@ -4,7 +4,7 @@
   "description": "Prototyping PageTurner",
   "main": "index.js",
   "scripts": {
-    "build": "cd 2021 && npm run build"
+    "build": "cd 2021 && npm install && npm run build"
   },
   "repository": {
     "type": "git",
