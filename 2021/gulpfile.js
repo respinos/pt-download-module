@@ -184,15 +184,19 @@ gulp.task('run', gulp.series('sass', 'scripts', 'app', 'volume_epub'));
 
 gulp.task('netlify:dist', function() {
   return gulp.src('./dist/**/*')
-  .pipe(gulp.dest('./build/dist'))
+  .pipe(gulp.dest('./build/2021/dist'))
 })
 
 gulp.task('netlify:files', function() {
   return gulp.src('../index.html')
-  .pipe(gulp.src('*.xsl'))
   .pipe(gulp.src('../*.xml'))
   .pipe(gulp.src('../pt.2021.xsl'))
   .pipe(gulp.dest('./build'))
+})
+
+gulp.task('netlify:2021', function() {
+  return gulp.src(['*.xsl', '*.xml'])
+    .pipe(gulp.dest('./build/2021'));
 })
 
 gulp.task('netlify:mdp-web', function() {
@@ -205,4 +209,4 @@ gulp.task('netlify:common', function() {
   .pipe(gulp.dest('./build/common'))
 })
 
-gulp.task('netlify', gulp.series('netlify:dist', 'netlify:files', 'netlify:mdp-web', 'netlify:common'));
+gulp.task('netlify', gulp.series('netlify:dist', 'netlify:files', 'netlify:2021', 'netlify:mdp-web', 'netlify:common'));
