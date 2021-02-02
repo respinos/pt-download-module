@@ -122,7 +122,7 @@ gulp.task('app', function() {
           patterns: [
             {
               from: path.resolve(__dirname, 'node_modules/@shoelace-style/shoelace/dist/shoelace/icons'),
-              to: path.resolve(__dirname, 'dist/shoelace/icons')
+              to: path.resolve(__dirname, 'shoelace/icons')
             }
           ]
         })
