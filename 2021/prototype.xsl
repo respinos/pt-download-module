@@ -100,6 +100,8 @@
           </div>
         </div>
         <div class="app--viewer">
+          <div class="page"></div>
+          <div class="page"></div>
         </div>
       </div>
 
