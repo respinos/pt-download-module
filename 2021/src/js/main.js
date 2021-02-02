@@ -17,12 +17,22 @@ const main = document.querySelector('main');
 
 window.addEventListener('load', (event) => {
   const selectPanel = document.querySelector('#action-select-panel');
-  selectPanel.addEventListener('sl-select', event => {
-    const selectedItem = event.detail.item;
-    console.log(event.detail, selectedItem.value);
-    document.body.dataset.panelState = 'open';
-  });
+  if ( selectPanel ) {
+    selectPanel.addEventListener('sl-select', event => {
+      const selectedItem = event.detail.item;
+      console.log(event.detail, selectedItem.value);
+      document.body.dataset.panelState = 'open';
+    });
+  }
 })
+
+if ( document.body.dataset.prototype == 'stacked' ) {
+  const actionSearch = document.querySelector('#action-search-volume');
+  actionSearch.addEventListener('click', (e) => {
+    document.body.dataset.panelState = 'open';
+    e.preventDefault();
+  })
+}
 
 main.addEventListener('click', function(e) {
     // loop parent nodes from the target to the delegation node

@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>2021.1 - Modern PageTurner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" />
 
@@ -128,6 +130,11 @@
       if ( params.has('view') ) {
         processor.setParameter(null, 'view', params.get('view'));
       }
+      if ( params.has('prototype') ) {
+        processor.setParameter(null, 'prototype', params.get('prototype'));
+      }
+
+      processor.setParameter(null, 'ts', Date.now() + "");
 
 
       try {
