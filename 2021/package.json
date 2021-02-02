@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx gulp app && npx gulp sass"
+    "build": "npx gulp app && npx gulp sass && npx gulp netlify"
   },
   "author": "",
   "license": "MIT",

@@ -181,3 +181,28 @@ gulp.task('volume_epub:watch', function () {
 
 gulp.task('default', gulp.parallel('sass:watch', 'app:watch', 'volume_epub:watch', 'scripts:watch'));
 gulp.task('run', gulp.series('sass', 'scripts', 'app', 'volume_epub'));
+
+gulp.task('netlify:dist', function() {
+  return gulp.src('./dist/**/*')
+  .pipe(gulp.dest('./build/dist'))
+})
+
+gulp.task('netlify:files', function() {
+  return gulp.src('../index.html')
+  .pipe(gulp.src('*.xsl'))
+  .pipe(gulp.src('../*.xml'))
+  .pipe(gulp.src('../pt.2021.xsl'))
+  .pipe(gulp.dest('./build'))
+})
+
+gulp.task('netlify:mdp-web', function() {
+  return gulp.src('../mdp-web/**/*')
+  .pipe(gulp.dest('./build/mdp-web'))
+})
+
+gulp.task('netlify:common', function() {
+  return gulp.src('../common/**/*')
+  .pipe(gulp.dest('./build/common'))
+})
+
+gulp.task('netlify', gulp.series('netlify:dist', 'netlify:files', 'netlify:mdp-web', 'netlify:common'));
