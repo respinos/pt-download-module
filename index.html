@@ -39,8 +39,12 @@
     <iframe id="output"></iframe>
 
     <script>
-      var inputFilename = '/' + location.search.substr(1);
-      document.title += ' : ' + location.search.substr(1);
+
+      var qs = '?file=' + location.search.substr(1);
+      var params = new URLSearchParams(qs);
+
+      var inputFilename = '/' + params.get('file');
+      document.title += ' : ' + params.get('file');
     </script>
     <script>
       var processor = new XSLTProcessor();
@@ -120,6 +124,10 @@
 
       xsltDocument = transformDoc;
       processor.reset();
+
+      if ( params.has('view') ) {
+        processor.setParameter(null, 'view', params.get('view'));
+      }
 
 
       try {

@@ -97,7 +97,7 @@ main {
   background: #fffefb;
   border: 1px solid #d5d3d3;
   box-shadow: gba(0, 0, 0, 0.1) 0 1px 10px;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
 body[data-panel-state="closed"] {
@@ -126,6 +126,8 @@ body[data-panel-state="open"] {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr;
+
+  padding: 1rem 0;
 
   .app--panels--list {
     padding: 0 1rem 1rem;
@@ -189,6 +191,10 @@ body[data-panel-state="open"] {
     &:last-child {
       margin-bottom: 2rem;
     }
+  }
+
+  .info {
+    width: 70ch;
   }
 
   &::after {

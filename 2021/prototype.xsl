@@ -10,6 +10,8 @@
   exclude-result-prefixes="exsl METS PREMIS"
   extension-element-prefixes="str exsl" xmlns:str="http://exslt.org/strings">
 
+  <xsl:param name="view" />
+
   <!-- Global Variables -->
   <xsl:variable name="gOrphanCandidate" select="/MBooksTop/MBooksGlobals/OrphanCandidate"/>
   <!-- <xsl:variable name="gFinalAccessStatus" select="/MBooksTop/MBooksGlobals/FinalAccessStatus"/> -->
@@ -100,8 +102,41 @@
           </div>
         </div>
         <div class="app--viewer">
-          <div class="page"></div>
-          <div class="page"></div>
+          <xsl:choose>
+            <xsl:when test="$view = 'restricted'">
+              <div class="info">
+                <xsl:variable name="find-in-library-link">
+                  <xsl:call-template name="FindInALibraryLink">
+                    <xsl:with-param name="class"> inline</xsl:with-param>
+                    <xsl:with-param name="label">find this item in a library</xsl:with-param>
+                  </xsl:call-template>
+                </xsl:variable>
+                <div class="alert alert-info alert-block">
+                  This item is <strong>not available online</strong> (<i class="icomoon icomoon-locked"></i> Limited - search only) due to copyright restrictions. <a href="https://www.hathitrust.org/help_copyright#RestrictedAccess">Learn More »</a>
+                </div>
+
+                <!-- <div style="margin-bottom: 2rem;">
+                  <xsl:call-template name="action-search-volume" />
+                </div> -->
+
+                <div>
+                  <p>
+                    <xsl:text>You can </xsl:text>
+                    <xsl:if test="exsl:node-set($find-in-library-link)//node()">
+                      <xsl:text>try to </xsl:text>
+                      <xsl:apply-templates select="exsl:node-set($find-in-library-link)" mode="copy" />
+                      <xsl:text> or </xsl:text>
+                    </xsl:if>
+                    <strong>search in this text</strong><xsl:text> to find the frequency and page number of specific words and phrases. This can be especially useful to help you decide if the book is worth buying, checking out from a library, etc.</xsl:text>
+                  </p>
+                </div>                  
+              </div>
+            </xsl:when>
+            <xsl:otherwise>
+              <div class="page"></div>
+              <div class="page"></div>
+            </xsl:otherwise>
+          </xsl:choose>
         </div>
       </div>
 
@@ -168,72 +203,77 @@
           </sl-menu>
         </sl-dropdown>
       </div>
-      <xsl:call-template name="build-reader-toolbar-navigator">
-        <xsl:with-param name="currentSeq" select="$currentSeq" />
-        <xsl:with-param name="totalSeq" select="$totalSeq" />
-        <xsl:with-param name="readingOrder" select="$readingOrder" />
-      </xsl:call-template>
-      <div class="control-group grouped">
-        <button class="btn" data-action="action-zoom-in">
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-plus-circle</xsl:with-param>
+      <xsl:choose>
+        <xsl:when test="$view = 'restricted'"></xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="build-reader-toolbar-navigator">
+            <xsl:with-param name="currentSeq" select="$currentSeq" />
+            <xsl:with-param name="totalSeq" select="$totalSeq" />
+            <xsl:with-param name="readingOrder" select="$readingOrder" />
           </xsl:call-template>
-        </button>
-        <button class="btn" data-action="action-zoom-out">
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-minus-circle</xsl:with-param>
-          </xsl:call-template>
-        </button>
-        <button class="btn" data-action="action-fullscreent">
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-arrows-fullscreen</xsl:with-param>
-          </xsl:call-template>
-        </button>
-      </div>
-      <div class="control-group">
-        <sl-dropdown id="action-select-view" hoist="true" placement="top">
-          <sl-button class="dropup" slot="trigger" caret="true">
-            <xsl:call-template name="build-pt-icon">
-              <xsl:with-param name="id">bi-files</xsl:with-param>
-            </xsl:call-template>
-            <span class="mq--hide--narrowest">View</span>
-          </sl-button>
-          <sl-menu>
-            <sl-menu-item>
-              <span class="menu-item-option">Scroll Page Scans</span>
-              <sl-icon slot="prefix" name="files"></sl-icon>
-            </sl-menu-item>
-            <sl-menu-item>
-              <span class="menu-item-option">Flip Page Scans</span>
-              <sl-icon slot="prefix" name="book"></sl-icon>
-            </sl-menu-item>
-            <sl-menu-item>
-              <span class="menu-item-option">Browse Thumbnails</span>
-              <sl-icon slot="prefix" name="grid"></sl-icon>
-            </sl-menu-item>
-            <sl-menu-item>
-              <span class="menu-item-option">View Page Scan by Page Scan</span>
-              <sl-icon slot="prefix" name="file-image"></sl-icon>
-            </sl-menu-item>
-            <sl-menu-item>
-              <span class="menu-item-option">View Plain Text</span>
-              <sl-icon slot="prefix" name="file-text"></sl-icon>
-            </sl-menu-item>
-          </sl-menu>
-        </sl-dropdown>
-      </div>
-      <div class="control-group grouped">
-        <button class="btn" data-action="action-go-previous">
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-arrow-left-circle</xsl:with-param>
-          </xsl:call-template>
-        </button>
-        <button class="btn" data-action="action-go-next">
-          <xsl:call-template name="build-pt-icon">
-            <xsl:with-param name="id">bi-arrow-right-circle</xsl:with-param>
-          </xsl:call-template>
-        </button>
-      </div>
+          <div class="control-group grouped">
+            <button class="btn" data-action="action-zoom-in">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-plus-circle</xsl:with-param>
+              </xsl:call-template>
+            </button>
+            <button class="btn" data-action="action-zoom-out">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-minus-circle</xsl:with-param>
+              </xsl:call-template>
+            </button>
+            <button class="btn" data-action="action-fullscreent">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-arrows-fullscreen</xsl:with-param>
+              </xsl:call-template>
+            </button>
+          </div>
+          <div class="control-group">
+            <sl-dropdown id="action-select-view" hoist="true" placement="top">
+              <sl-button class="dropup" slot="trigger" caret="true">
+                <xsl:call-template name="build-pt-icon">
+                  <xsl:with-param name="id">bi-files</xsl:with-param>
+                </xsl:call-template>
+                <span class="mq--hide--narrowest">View</span>
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item>
+                  <span class="menu-item-option">Scroll Page Scans</span>
+                  <sl-icon slot="prefix" name="files"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">Flip Page Scans</span>
+                  <sl-icon slot="prefix" name="book"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">Browse Thumbnails</span>
+                  <sl-icon slot="prefix" name="grid"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">View Page Scan by Page Scan</span>
+                  <sl-icon slot="prefix" name="file-image"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">View Plain Text</span>
+                  <sl-icon slot="prefix" name="file-text"></sl-icon>
+                </sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
+          </div>
+          <div class="control-group grouped">
+            <button class="btn" data-action="action-go-previous">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-arrow-left-circle</xsl:with-param>
+              </xsl:call-template>
+            </button>
+            <button class="btn" data-action="action-go-next">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-arrow-right-circle</xsl:with-param>
+              </xsl:call-template>
+            </button>
+          </div>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
@@ -292,7 +332,12 @@
   </xsl:template>
 
   <xsl:template name="setup-body-data-attributes">
-    <xsl:attribute name="data-panel-state">closed</xsl:attribute>
+    <xsl:attribute name="data-panel-state">
+      <xsl:choose>
+        <xsl:when test="$view = 'restricted'">open</xsl:when>
+        <xsl:otherwise>closed</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
   </xsl:template>
 
   <xsl:template name="get-page-title">
