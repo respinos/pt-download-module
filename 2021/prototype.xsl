@@ -71,6 +71,37 @@
       <xsl:if test="$view != 'restricted'">
         <div class="stacked--reader">
           <div class="stacked--search">
+            <sl-dropdown id="action-select-panel" hoist="true" placement="top">
+              <sl-button slot="trigger" caret="true">
+                <xsl:call-template name="build-pt-icon">
+                  <xsl:with-param name="id">bi-gear-fill</xsl:with-param>
+                </xsl:call-template>
+                <span class="mq--hide--narrowest">Options</span>
+              </sl-button>
+              <sl-menu>
+                <sl-menu-item>
+                  <span class="menu-item-option">Search in this book</span>
+                  <sl-icon slot="prefix" name="search"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">Contents</span>
+                  <sl-icon slot="prefix" name="list"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item>
+                  <span class="menu-item-option">Download</span>
+                  <sl-icon slot="prefix" name="download"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-divider class="mq--mobile"></sl-menu-divider>
+                <sl-menu-item class="mq--mobile">
+                  <span class="menu-item-option">Configure View</span>
+                  <sl-icon slot="prefix" name="files"></sl-icon>
+                </sl-menu-item>
+                <sl-menu-item class="mq--mobile">
+                  <span class="menu-item-option">Configure Zoom</span>
+                  <sl-icon slot="prefix" name="plus-circle"></sl-icon>
+                </sl-menu-item>
+              </sl-menu>
+            </sl-dropdown>
             <form>
               <div class="input-group-text">
                 <label class="small" for="app--header--q1">Search in this text</label>
@@ -163,9 +194,10 @@
 
         </div>
         <div class="stacked--main--options">
-          <div class="stacked--option">
-            <xsl:call-template name="download-this-book" />
-          </div>
+          <!-- <xsl:call-template name="download-this-book" /> -->
+          <xsl:call-template name="collect-this-book" />
+          <xsl:call-template name="share-this-book" />
+          <xsl:call-template name="versionLabel" />
         </div>
       </div>
     </main>
