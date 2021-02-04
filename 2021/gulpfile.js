@@ -191,6 +191,7 @@ gulp.task('netlify:files', function() {
   return gulp.src('../index.html')
   .pipe(gulp.src('../*.xml'))
   .pipe(gulp.src('../pt.2021.xsl'))
+  .pipe(gulp.src('../*.html'))
   .pipe(gulp.dest('./build'))
 })
 
