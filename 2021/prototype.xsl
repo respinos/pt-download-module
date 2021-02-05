@@ -84,6 +84,7 @@
         <!-- <xsl:call-template name="build-access-alert-block" /> -->
         <div class="d--panels">
           <xsl:call-template name="sidebar-about-this-book" />
+          <xsl:call-template name="get-this-book" />
           <div class="panel options">
             <div class="d-btn-group">
               <sl-button size="large" data-toggle="drawer" data-target="#panel-search">
