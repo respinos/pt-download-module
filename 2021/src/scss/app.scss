@@ -195,6 +195,12 @@ svg.rotate-90 {
 
   @extend %panel-component;
 
+  .panel {
+    h3 {
+      display: none;
+    }
+  }
+
   .d-btn-group {
     display: flex;
     flex-direction: column;
