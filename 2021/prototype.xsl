@@ -60,10 +60,154 @@
       <xsl:when test="$prototype = 'stacked'">
         <xsl:call-template name="build-main-container-stacked" />
       </xsl:when>
+      <xsl:when test="$prototype = 'drawers'">
+        <xsl:call-template name="build-main-container-drawers" />
+      </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="build-main-container-default" />
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="build-main-container-drawers">
+    <main class="d--container" id="main">
+      <xsl:call-template name="build-main-container-drawers-main" />
+      <div class="d--sidebar--toggle--container">
+        <button class="btn mq--narrow" id="action-toggle-sidebar-narrow" aria-expanded="false">
+          <xsl:call-template name="build-pt-icon">
+            <xsl:with-param name="class">rotate-90</xsl:with-param>
+            <xsl:with-param name="id">bi-arrows-collapse</xsl:with-param>
+          </xsl:call-template>
+        </button>
+      </div>
+      <div class="d--sidebar scroll-gradient" id="sidebar">
+        <!-- <xsl:call-template name="build-access-alert-block" /> -->
+        <div class="d--panels">
+          <xsl:call-template name="sidebar-about-this-book" />
+          <div class="panel options">
+            <div class="d-btn-group">
+              <sl-button size="large" data-toggle="drawer" data-target="#panel-search">
+                <sl-icon slot="prefix" name="search"></sl-icon>
+                Search
+              </sl-button>
+              <sl-button size="large" data-toggle="drawer" data-target="#panel-table-of-contents">
+                <sl-icon slot="prefix" name="list"></sl-icon>
+                Contents
+              </sl-button>
+              <sl-button size="large" data-toggle="drawer" data-target="#panel-download">
+                <sl-icon slot="prefix" name="download"></sl-icon>
+                Download
+              </sl-button>
+              <sl-button size="large" data-toggle="drawer" data-target="#panel-share">
+                <sl-icon slot="prefix" name="share"></sl-icon>
+                Share
+              </sl-button>
+              <sl-button size="large" data-toggle="drawer" data-target="#panel-bookmark">
+                <sl-icon slot="prefix" name="bookmark"></sl-icon>
+                Bookmark
+              </sl-button>
+            </div>
+          </div>
+
+          <sl-drawer id="panel-search" label="Search inside" contained="true" class="drawer-contained" style="--size: 98%;">
+            
+            <form style="margin-bottom: 1rem">
+              <div class="input-group-text">
+                <label class="small" for="app--header--q1">Search in this text</label>
+                <input type="text" class="form-control" name="q1" id="app--header--q1" />
+              </div>
+              <button class="btn" aria-label="Search" style="margin-top: 0.5rem">
+                <xsl:call-template name="build-pt-icon">
+                  <xsl:with-param name="id">bi-search</xsl:with-param>
+                </xsl:call-template>
+              </button>
+            </form>
+
+            <xsl:call-template name="build-search-results" />
+
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+          <sl-drawer id="panel-table-of-contents" label="Contents" contained="true" class="drawer-contained" style="--size: 98%;">
+
+            <xsl:call-template name="sidebar-table-of-contents" />
+
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+          <sl-drawer id="panel-download" label="Download" contained="true" class="drawer-contained" style="--size: 98%;">
+
+            <xsl:call-template name="download-this-book" />
+
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+          <sl-drawer id="panel-share" label="Share" contained="true" class="drawer-contained" style="--size: 98%;">
+
+            <xsl:call-template name="share-this-book" />
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+          <sl-drawer id="panel-bookmark" label="Bookmark" contained="true" class="drawer-contained" style="--size: 98%;">
+
+            <xsl:call-template name="collect-this-book" />
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+          <sl-drawer id="panel-contents" label="Contents" contained="true" class="drawer-contained" style="--size: 98%;">
+
+            <sl-button slot="footer" type="primary">Close</sl-button>
+          </sl-drawer>
+
+
+        </div>
+      </div>
+    </main>
+    <script type="text/javascript" src="/2021/dist/js/main.js?_={$ts}"></script>
+  </xsl:template>
+
+  <xsl:template name="build-main-container-drawers-main">
+    <section class="d--main">
+      <xsl:call-template name="build-main-container-drawers-toolbar" />
+
+      <div class="d--reader">
+        <div class="page"></div>
+        <div class="page"></div>
+      </div>
+    </section>
+  </xsl:template>
+
+  <xsl:template name="build-main-container-drawers-toolbar">
+    <div class="d--toolbar--reader" style="--sl-input-height-medium: 48px;">
+
+      <div class="output-group">
+        <span>#</span>
+        <input type="text" value="300" />
+        <span> / </span>
+        <span>500</span>
+      </div>
+
+      <sl-button-group>
+        <sl-button>
+          <sl-icon name="plus-circle"></sl-icon>
+        </sl-button>
+        <sl-button>
+          <sl-icon name="dash-circle"></sl-icon>
+        </sl-button>
+      </sl-button-group>
+
+      <sl-button-group>
+        <sl-button>
+          <sl-icon name="arrow-left-circle"></sl-icon>
+        </sl-button>
+        <sl-button>
+          <sl-icon name="arrow-right-circle"></sl-icon>
+        </sl-button>
+        <sl-button>
+          <sl-icon name="arrows-fullscreen"></sl-icon>
+        </sl-button>
+      </sl-button-group>
+    </div>
   </xsl:template>
 
   <xsl:template name="build-main-container-stacked">
@@ -973,4 +1117,30 @@
     </div>
   </xsl:template>
 
+  <xsl:template name="sidebar-table-of-contents">
+    <xsl:variable name="gFeatureList" select="/MBooksTop/MdpApp/FeatureList"/>
+
+    <div class="panel app--panel--contents" rel="note">
+      <h3>
+        <xsl:call-template name="build-pt-icon">
+          <xsl:with-param name="id">bi-list</xsl:with-param>
+        </xsl:call-template>
+        <span>Table of Contents</span>
+      </h3>
+
+      <ul class="scrollable-list action-contents-navigation">
+        <xsl:for-each select="$gFeatureList/Feature">
+          <li>
+            <a href="{Link}" data-seq="{Seq}">
+              <xsl:value-of select="Label" />
+              <xsl:if test="normalize-space(Page)">
+                <xsl:text> - </xsl:text>
+                <xsl:value-of select="Page" />
+              </xsl:if>
+            </a>
+          </li>
+        </xsl:for-each>
+      </ul>
+    </div>
+  </xsl:template>
 </xsl:stylesheet>

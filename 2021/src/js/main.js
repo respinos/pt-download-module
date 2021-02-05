@@ -26,6 +26,21 @@ window.addEventListener('load', (event) => {
   }
 })
 
+if ( document.body.dataset.prototype == 'drawers' ) {
+
+  const drawers = {};
+  document.querySelectorAll('sl-drawer').forEach((drawer) => {
+    drawers[drawer.id] = drawer;
+  })
+
+  document.querySelectorAll('[data-toggle="drawer"]').forEach((button) => {
+    button.addEventListener('click', () => {
+      var targetId = button.dataset.target.substr(1);
+      drawers[targetId].show();
+    })
+  })
+}
+
 if ( document.body.dataset.prototype == 'stacked' ) {
   const actionSearch = document.querySelector('#action-search-volume');
   actionSearch.addEventListener('click', (e) => {
