@@ -58,6 +58,22 @@ svg.rotate-90 {
   transform: rotateZ(90deg); // sure
 }
 
+.panel--header {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.25rem;
+  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
 // PANEL
 %panel-component {
   .panel {

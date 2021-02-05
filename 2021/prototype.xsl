@@ -131,6 +131,13 @@
 
           <sl-drawer id="panel-table-of-contents" label="Contents" contained="true" class="drawer-contained" style="--size: 98%;">
 
+            <h3 slot="label" class="panel--header">
+              <xsl:call-template name="build-pt-icon">
+                <xsl:with-param name="id">bi-list</xsl:with-param>
+              </xsl:call-template>
+              <span>Table of Contents</span>
+            </h3>
+
             <xsl:call-template name="sidebar-table-of-contents" />
 
             <sl-button slot="footer" type="primary">Close</sl-button>
@@ -187,6 +194,37 @@
         <span> / </span>
         <span>500</span>
       </div>
+
+      <sl-dropdown id="action-select-view" hoist="true" placement="top" style="margin-right:0.5rem">
+        <sl-button class="dropup" slot="trigger" caret="false">
+          <sl-icon name="files"></sl-icon>
+          <!-- <xsl:call-template name="build-pt-icon">
+            <xsl:with-param name="id">bi-files</xsl:with-param>
+          </xsl:call-template> -->
+        </sl-button>
+        <sl-menu>
+          <sl-menu-item>
+            <span class="menu-item-option">Scroll Page Scans</span>
+            <sl-icon slot="prefix" name="files"></sl-icon>
+          </sl-menu-item>
+          <sl-menu-item>
+            <span class="menu-item-option">Flip Page Scans</span>
+            <sl-icon slot="prefix" name="book"></sl-icon>
+          </sl-menu-item>
+          <sl-menu-item>
+            <span class="menu-item-option">Browse Thumbnails</span>
+            <sl-icon slot="prefix" name="grid"></sl-icon>
+          </sl-menu-item>
+          <sl-menu-item>
+            <span class="menu-item-option">View Page Scan by Page Scan</span>
+            <sl-icon slot="prefix" name="file-image"></sl-icon>
+          </sl-menu-item>
+          <sl-menu-item>
+            <span class="menu-item-option">View Plain Text</span>
+            <sl-icon slot="prefix" name="file-text"></sl-icon>
+          </sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
 
       <sl-button-group>
         <sl-button>
