@@ -16,7 +16,7 @@ body[data-prototype="panels"] {
   }
 }
 
-body[data-prototype="drawers"] {
+body[data-prototype="drawers"], body[data-prototype="accordion"] {
   #root {
     height: 100vh;
     width: 100vw;
@@ -72,6 +72,34 @@ svg.rotate-90 {
   & > * + * {
     margin-left: 0.5rem;
   }
+}
+
+h3[slot] {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & > * + * {
+    margin-left: 0.5rem;
+  }
+}
+
+body[data-prototype="accordion"] .panel {
+  border-top: 1px solid #ddd;
+  padding-top: 1.5rem;
+
+  &.bibLinks {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+
+.d--panels sl-details .panel {
+  padding: 1.5rem 0 0;
+  width: 100%;
 }
 
 // PANEL
@@ -1039,6 +1067,10 @@ sl-button::part(label) {
   }
 
 
+}
+
+sl-details + sl-details {
+  margin-top: 0.5rem;
 }
 
 .mq--mobile {

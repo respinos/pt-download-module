@@ -41,6 +41,14 @@ if ( document.body.dataset.prototype == 'drawers' ) {
   })
 }
 
+if ( document.body.dataset.prototype == 'accordion' ) {
+  const container = document.querySelector('.d--panels');
+  // Close all other details when one is shown
+  container.addEventListener('sl-show', event => {
+    [...container.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+  });
+}
+
 if ( document.body.dataset.prototype == 'stacked' ) {
   const actionSearch = document.querySelector('#action-search-volume');
   actionSearch.addEventListener('click', (e) => {
